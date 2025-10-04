@@ -4,6 +4,7 @@ import Landing from "./Pages/Landing";
 import Login from "./Pages/Login";
 import axios from "axios";
 import Register from "./Pages/Register";
+import Dashboard from "./Pages/Dashboard";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

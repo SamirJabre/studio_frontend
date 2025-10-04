@@ -1,10 +1,25 @@
+import { useEffect } from "react";
 import { useFormik } from "formik";
 import { string, object } from "yup";
 import Banner from "../Assets/Banners/LoginBanner.png";
 import AuthInput from "../Base/AuthInput";
 import db from "../db.json";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../Redux/Slices/authSlice.js";
 
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
+
+  useEffect(() => {
+    if (isAuthenticated || isAuthenticated2) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, isAuthenticated2, navigate]);
+
   const userSchema = object({
     email: string().email("Enter a valid email").required("Email is required"),
     password: string()
@@ -32,7 +47,7 @@ function Login() {
       if (loginResult === "success") {
         actions.resetForm();
         actions.setStatus("");
-        window.location.href = "/dashboard";
+        navigate("/dashboard");
       } else {
         actions.setStatus("Invalid email or password");
       }
@@ -46,6 +61,8 @@ function Login() {
         (u) => u.email === values.email && u.password === values.password
       );
       if (user) {
+        dispatch(login(user));
+        localStorage.setItem("isAuthenticated", "true");
         console.log("Logged in", user);
         return "success";
       } else {

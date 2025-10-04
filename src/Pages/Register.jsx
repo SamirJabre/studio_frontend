@@ -1,12 +1,27 @@
+import { useEffect } from "react";
 import { useFormik } from "formik";
 import { string, object } from "yup";
 import Banner from "../Assets/Banners/LoginBanner.png";
 import AuthInput from "../Base/AuthInput";
+import { useNavigate } from "react-router";
 import db from "../db.json";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../Redux/Slices/authSlice.js";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
+
+  useEffect(() => {
+    if (isAuthenticated || isAuthenticated2) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, isAuthenticated2, navigate]);
+
   const userSchema = object({
     name: string().required("Name is required"),
     email: string().email("Enter a valid email").required("Email is required"),
@@ -36,7 +51,7 @@ function Register() {
       if (registerResult === "success") {
         actions.resetForm();
         actions.setStatus("");
-        window.location.href = "/dashboard";
+        navigate("/dashboard");
       } else {
         actions.setStatus("Used email");
       }
@@ -54,6 +69,8 @@ function Register() {
         const response = await axios.post("/users", values);
         console.log(response.data);
         console.error("User Registered", user);
+        dispatch(login(user));
+        localStorage.setItem("isAuthenticated", "true");
         return "success";
       }
     } catch (error) {
