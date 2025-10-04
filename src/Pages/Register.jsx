@@ -3,9 +3,12 @@ import { string, object } from "yup";
 import Banner from "../Assets/Banners/LoginBanner.png";
 import AuthInput from "../Base/AuthInput";
 import db from "../db.json";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:4000";
 
-function Login() {
+function Register() {
   const userSchema = object({
+    name: string().required("Name is required"),
     email: string().email("Enter a valid email").required("Email is required"),
     password: string()
       .min(5, "Password must be at least 5 characters")
@@ -23,34 +26,35 @@ function Login() {
     touched,
   } = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
     },
     validationSchema: userSchema,
     onSubmit: async (values, actions) => {
-      const loginResult = await handleLogin(values);
-      if (loginResult === "success") {
+      const registerResult = await handleRegister(values);
+      if (registerResult === "success") {
         actions.resetForm();
         actions.setStatus("");
         window.location.href = "/dashboard";
       } else {
-        actions.setStatus("Invalid email or password");
+        actions.setStatus("Used email");
       }
       actions.setSubmitting(false);
     },
   });
 
-  const handleLogin = async (values) => {
+  const handleRegister = async (values) => {
     try {
-      const user = db?.users?.find(
-        (u) => u.email === values.email && u.password === values.password
-      );
+      const user = db?.users?.find((u) => u.email === values.email);
       if (user) {
-        console.log("Logged in", user);
-        return "success";
-      } else {
-        console.error("Invalid credentials");
+        console.log("Register Failed, User with this email already exist");
         return "error";
+      } else {
+        const response = await axios.post("/users", values);
+        console.log(response.data);
+        console.error("User Registered", user);
+        return "success";
       }
     } catch (error) {
       console.error("Login failed", error);
@@ -73,6 +77,15 @@ function Login() {
           onSubmit={handleSubmit}
           className="w-full h-fit flex flex-col items-center justify-between"
         >
+          <AuthInput
+            type="name"
+            name="name"
+            value={values.name}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={errors.name}
+            touched={touched.name}
+          />
           <AuthInput
             type="email"
             name="email"
@@ -107,4 +120,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

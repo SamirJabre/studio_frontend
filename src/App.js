@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import Landing from "./Pages/Landing";
 import Login from "./Pages/Login";
 import axios from "axios";
+import Register from "./Pages/Register";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -36,6 +37,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

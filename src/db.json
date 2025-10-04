@@ -1,22 +1,8 @@
 {
   "users": [
     {
-      "id": "1",
-      "email": "admin@example.com",
-      "password": "password123"
-    },
-    {
-      "id": "2",
-      "email": "samir@example.com",
-      "password": "secret"
-    },
-    {
-      "id": "1759508785773",
-      "email": "newuser@example.com",
-      "password": "password123"
-    },
-    {
-      "id": "1759508785723",
+      "id": "7ed2",
+      "name": "Samir Jabre",
       "email": "samirjabre8@gmail.com",
       "password": "Samirj49"
     }
