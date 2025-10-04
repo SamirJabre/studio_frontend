@@ -1,0 +1,23 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "admin@example.com",
+      "password": "password123",
+      "name": "Admin User"
+    },
+    {
+      "id": "2",
+      "email": "samir@example.com",
+      "password": "secret",
+      "name": "Samir Jabre"
+    },
+    {
+      "id": 1759508785773,
+      "email": "newuser@example.com",
+      "password": "password123",
+      "name": "New User"
+    }
+  ],
+  "projects": []
+}
