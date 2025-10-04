@@ -61,7 +61,7 @@ function Login() {
         (u) => u.email === values.email && u.password === values.password
       );
       if (user) {
-        dispatch(login(user));
+        dispatch(login({ ...user, password: undefined }));
         localStorage.setItem("isAuthenticated", "true");
         console.log("Logged in", user);
         return "success";

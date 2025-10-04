@@ -69,7 +69,7 @@ function Register() {
         const response = await axios.post("/users", values);
         console.log(response.data);
         console.error("User Registered", user);
-        dispatch(login(user));
+        dispatch(login({ ...user, password: undefined }));
         localStorage.setItem("isAuthenticated", "true");
         return "success";
       }
