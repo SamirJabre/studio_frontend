@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { string, object } from "yup";
+import Banner from "../Assets/Banners/LoginBanner.png";
 import AuthInput from "../Base/AuthInput";
 import db from "../db.json";
 
@@ -59,9 +60,15 @@ function Login() {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gray-200">
-      <div className="w-[450px] sm:w-[600px] h-2/3 bg-[#F0F1FF] shadow-2xl flex items-center justify-center flex-col gap-y-2 rounded-2xl px-5">
-        <div className="bg-red-200 w-full h-1/3"></div>
-        <h1 className="text-3xl font-bold mb-10">Welcome to Studio</h1>
+      <div className="w-[450px] sm:w-[600px] h-fit bg-[#F0F1FF] shadow-2xl flex items-center justify-center flex-col gap-y-2 rounded-2xl p-5">
+        <div className="w-full h-[40%]">
+          <img
+            src={Banner}
+            alt="Login Banner"
+            className="w-full h-full object-cover rounded-lg"
+          />
+        </div>
+        <h1 className="text-3xl font-bold my-10">Welcome to Studio</h1>
         <form
           onSubmit={handleSubmit}
           className="w-full h-fit flex flex-col items-center justify-between"
