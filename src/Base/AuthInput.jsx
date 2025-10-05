@@ -1,7 +1,5 @@
 import { styled } from "@mui/material/styles";
 import { TextField } from "@mui/material";
-import { Background } from "@xyflow/react";
-import { BorderClear } from "@mui/icons-material";
 
 const AuthTextField = styled(TextField)({
   width: "100%",

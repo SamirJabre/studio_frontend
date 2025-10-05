@@ -13,5 +13,48 @@
       "password": "Samirj49"
     }
   ],
-  "projects": []
+  "projects": [
+    {
+      "id": 1,
+      "title": "E-commerce Website",
+      "description": "A modern e-commerce platform built with React and Node.js featuring user authentication, payment integration, and inventory management.",
+      "lastModified": "2 hours ago",
+      "color": "#5664F5"
+    },
+    {
+      "id": 2,
+      "title": "Mobile Banking App",
+      "description": "Secure mobile banking application with biometric authentication, real-time transactions, and budget tracking features.",
+      "lastModified": "1 day ago",
+      "color": "#10B981"
+    },
+    {
+      "id": 3,
+      "title": "Learning Management System",
+      "description": "Comprehensive LMS platform for online education with video streaming, quiz systems, and progress tracking.",
+      "lastModified": "3 days ago",
+      "color": "#F59E0B"
+    },
+    {
+      "id": 4,
+      "title": "Social Media Dashboard",
+      "description": "Analytics dashboard for social media management with post scheduling, engagement metrics, and competitor analysis.",
+      "lastModified": "5 days ago",
+      "color": "#EF4444"
+    },
+    {
+      "id": 5,
+      "title": "Healthcare Portal",
+      "description": "Patient management system with appointment scheduling, medical records, and telemedicine integration.",
+      "lastModified": "1 week ago",
+      "color": "#8B5CF6"
+    },
+    {
+      "id": 6,
+      "title": "Inventory Management",
+      "description": "Real-time inventory tracking system with barcode scanning, supplier management, and automated reordering.",
+      "lastModified": "2 weeks ago",
+      "color": "#06B6D4"
+    }
+  ]
 }

@@ -8,28 +8,28 @@ import Dashboard from "./Pages/Dashboard";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
-const fetchUsers = async () => {
-  try {
-    const response = await axios.get("/users");
-    console.log("Users:", response.data);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  }
-};
+// const fetchUsers = async () => {
+//   try {
+//     const response = await axios.get("/users");
+//     console.log("Users:", response.data);
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//   }
+// };
 
-const addUser = async () => {
-  try {
-    const response = await axios.post("/users", {
-      id: Date.now(),
-      email: "newuser@example.com",
-      password: "password123",
-      name: "New User",
-    });
-    console.log("Users:", response.data);
-  } catch (error) {
-    console.error("Error adding user:", error);
-  }
-};
+// const addUser = async () => {
+//   try {
+//     const response = await axios.post("/users", {
+//       id: Date.now(),
+//       email: "newuser@example.com",
+//       password: "password123",
+//       name: "New User",
+//     });
+//     console.log("Users:", response.data);
+//   } catch (error) {
+//     console.error("Error adding user:", error);
+//   }
+// };
 
 const App = () => {
   return (

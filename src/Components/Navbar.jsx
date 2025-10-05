@@ -1,285 +1,143 @@
 import { useState } from "react";
-
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import logo from "../Assets/Logo/StudioLogo.png";
+import SearchInput from "../Base/SearchInput.jsx";
 import {
-  AppBar,
   Avatar,
   Box,
-  Button,
-  Container,
   IconButton,
   Menu,
   MenuItem,
-  Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
-import AdbIcon from "@mui/icons-material/Adb";
-import MenuIcon from "@mui/icons-material/Menu";
+import { useDispatch } from "react-redux";
+import { logout } from "../Redux/Slices/authSlice.js";
+import { changeSortOrder } from "../Redux/Slices/sortSlice.js";
 import { useNavigate } from "react-router";
 
-const pages = ["Pricing", "About", "Blog"];
-
-function Navbar({ logout }) {
+function Navbar({ handleSearch }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
+  // const sortingOptions = ["Default", "Ascending", "Descending"];
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
-  const handlePageChange = (page) => {
-    navigate(`/${page}`);
-    console.log(page);
+  const toggleSort = () => {
+    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    dispatch(changeSortOrder());
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    dispatch(logout());
+    navigate("/login");
   };
 
   return (
-    <AppBar
-      position="static"
-      elevation={0}
-      sx={{
-        background: "#5664F5",
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-      }}
-    >
-      <Container maxWidth>
-        <Toolbar disableGutters sx={{ minHeight: "70px" }}>
-          <AdbIcon
-            sx={{
-              display: { xs: "none", md: "flex" },
-              mr: 1.5,
-              fontSize: 32,
-              color: "#fff",
-            }}
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 4,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 800,
-              letterSpacing: "0.05rem",
-              color: "#fff",
-              textDecoration: "none",
-              fontSize: "1.5rem",
-              textShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            }}
-          >
-            STUDIO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-              sx={{
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                },
-              }}
-            >
-              <MenuIcon />
+    <nav className="w-full h-16 sm:h-20 flex justify-between items-center bg-white shadow-lg px-2 sm:px-4">
+      <div className="flex items-center justify-center">
+        <img
+          src={logo}
+          alt="Logo"
+          className="h-8 w-8 sm:h-12 sm:w-12 md:h-14 md:w-14 object-contain"
+        />
+        <p className="text-lg sm:text-xl md:text-2xl font-semibold font-sans ml-1 sm:ml-2">
+          Studio
+        </p>
+      </div>
+      <div className="flex justify-center items-center gap-x-2 sm:gap-x-4">
+        <div className="hidden sm:block">
+          <SearchInput handleSearch={handleSearch} />
+        </div>
+        <button
+          type="button"
+          onClick={toggleSort}
+          aria-label={`Sort ${
+            sortOrder === "asc" ? "ascending" : "descending"
+          }`}
+          className="group flex items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 h-[32px] sm:h-[40px] rounded-[5px] border border-opacity-70 border-[#5664F5] text-black hover:bg-[#5664F5] hover:text-white transition-colors"
+        >
+          <span className="flex flex-col leading-none">
+            <FaArrowUp
+              size={6}
+              className={`sm:hidden ${
+                sortOrder === "asc" ? "opacity-100" : "opacity-40"
+              } group-hover:opacity-80`}
+            />
+            <FaArrowUp
+              size={8}
+              className={`hidden sm:block ${
+                sortOrder === "asc" ? "opacity-100" : "opacity-40"
+              } group-hover:opacity-80`}
+            />
+            <FaArrowDown
+              size={6}
+              className={`sm:hidden ${
+                sortOrder === "desc" ? "opacity-100" : "opacity-40"
+              } group-hover:opacity-80`}
+            />
+            <FaArrowDown
+              size={8}
+              className={`hidden sm:block ${
+                sortOrder === "desc" ? "opacity-100" : "opacity-40"
+              } group-hover:opacity-80`}
+            />
+          </span>
+          <span className="font-medium text-xs sm:text-sm">Sort</span>
+        </button>
+        <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar
+                alt="Walter White"
+                src="https://i.sstatic.net/pEihy.png"
+                sx={{
+                  width: { xs: 32, sm: 40 },
+                  height: { xs: 32, sm: 40 },
+                }}
+              />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-                "& .MuiPaper-root": {
-                  borderRadius: "12px",
-                  mt: 1,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "rgba(86, 100, 245, 0.1)",
-                    },
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      textAlign: "center",
-                      fontWeight: 500,
-                      color: "#5664F5",
-                    }}
-                    onClick={() => handlePageChange(page.toLowerCase())}
-                  >
-                    {page}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon
-            sx={{
-              display: { xs: "flex", md: "none" },
-              mr: 1,
-              fontSize: 28,
-              color: "#fff",
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
             }}
-          />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "'Poppins', sans-serif",
-              fontWeight: 800,
-              letterSpacing: "0.05rem",
-              color: "#fff",
-              textDecoration: "none",
-              fontSize: "1.25rem",
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
             }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
           >
-            STUDIO
-          </Typography>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              gap: 1.5,
-              ml: 3,
-            }}
-          >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                // onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: "white",
-                  display: "block",
-                  px: 2.5,
-                  py: 1,
-                  fontWeight: 600,
-                  fontSize: "0.95rem",
-                  textTransform: "none",
-                  borderRadius: "8px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 255, 255, 0.15)",
-                    transform: "translateY(-2px)",
-                  },
-                }}
-                onClick={() => handlePageChange(page.toLowerCase())}
-              >
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{
-                  p: 0,
-                  border: "2px solid rgba(255, 255, 255, 0.3)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    border: "2px solid rgba(255, 255, 255, 0.6)",
-                    transform: "scale(1.05)",
-                  },
-                }}
-              >
-                <Avatar
-                  alt="User Avatar"
-                  src="/static/images/avatar/2.jpg"
-                  sx={{
-                    width: 40,
-                    height: 40,
-                  }}
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{
-                mt: "45px",
-                "& .MuiPaper-root": {
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                  minWidth: "160px",
-                },
-              }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem
-                onClick={handleCloseUserMenu}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "rgba(86, 100, 245, 0.1)",
-                  },
-                }}
-              >
-                <Typography
-                  sx={{
-                    textAlign: "center",
-                    fontWeight: 500,
-                    color: "#5664F5",
-                    width: "100%",
-                  }}
-                  onClick={logout}
-                >
-                  Logout
-                </Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Typography sx={{ textAlign: "center" }} onClick={handleLogout}>
+                Log Out
+              </Typography>
+            </MenuItem>
+          </Menu>
+        </Box>
+      </div>
+
+      {/* Mobile Search - Show below navbar on small screens */}
+      <div className="sm:hidden absolute top-16 left-0 right-0 bg-white border-t border-gray-200 px-2 py-2 z-10">
+        <SearchInput handleSearch={handleSearch} />
+      </div>
+    </nav>
   );
 }
+
 export default Navbar;
