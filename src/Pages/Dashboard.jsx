@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { logout } from "../Redux/Slices/authSlice";
+import Navbar from "../Components/Navbar.jsx";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -23,9 +24,8 @@ function Dashboard() {
   };
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <button onClick={handleLogout}>Log Out</button>
+    <div className="w-screen h-screen flex flex-col justify-start items-center bg-gray-100">
+      <Navbar logout={handleLogout} />
     </div>
   );
 }

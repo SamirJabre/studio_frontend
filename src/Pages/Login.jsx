@@ -63,7 +63,6 @@ function Login() {
       if (user) {
         dispatch(login({ ...user, password: undefined }));
         localStorage.setItem("isAuthenticated", "true");
-        console.log("Logged in", user);
         return "success";
       } else {
         console.error("Invalid credentials");

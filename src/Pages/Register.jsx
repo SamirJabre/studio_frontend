@@ -66,9 +66,7 @@ function Register() {
         console.log("Register Failed, User with this email already exist");
         return "error";
       } else {
-        const response = await axios.post("/users", values);
-        console.log(response.data);
-        console.error("User Registered", user);
+        await axios.post("/users", values);
         dispatch(login({ ...user, password: undefined }));
         localStorage.setItem("isAuthenticated", "true");
         return "success";
