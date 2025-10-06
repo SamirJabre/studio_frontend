@@ -1,18 +1,59 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   FaFolder,
   FaCalendarAlt,
   FaEllipsisV,
   FaTrash,
   FaCopy,
+  FaClock,
 } from "react-icons/fa";
 
-function ProjectCard({
-  title = "Project Title",
-  description = "This is a sample project description that shows what the project is about.",
-  lastModified = "2 days ago",
-  color = "#5664F5",
-}) {
+// Helper function to format date
+const formatDate = (isoString) => {
+  if (!isoString) return "N/A";
+
+  const date = new Date(isoString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now - date) / 1000);
+
+  // Less than a minute
+  if (diffInSeconds < 60) {
+    return "just now";
+  }
+
+  // Less than an hour
+  if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  }
+
+  // Less than a day
+  if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+
+  // Less than a week
+  if (diffInSeconds < 604800) {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} day${days > 1 ? "s" : ""} ago`;
+  }
+
+  // Less than a month
+  if (diffInSeconds < 2592000) {
+    const weeks = Math.floor(diffInSeconds / 604800);
+    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+  }
+
+  // Otherwise show the date
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+function ProjectCard({ title, description, metadata, color }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleDelete = () => {
@@ -28,12 +69,12 @@ function ProjectCard({
   };
 
   return (
-    <div className="group w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100 overflow-hidden relative">
+    <div className="group w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100 overflow-hidden relative flex flex-col">
       {/* Header with color accent */}
       <div className="h-2 w-full" style={{ backgroundColor: color }}></div>
 
       {/* Card Content */}
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 flex-1 flex flex-col">
         {/* Title and Menu */}
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-lg font-bold text-gray-800 group-hover:text-[#5664F5] transition-colors duration-200 line-clamp-2 flex-1 pr-2">
@@ -80,22 +121,27 @@ function ProjectCard({
           {description}
         </p>
 
+        {/* Spacer to push content to bottom */}
+        <div className="flex-1"></div>
+
         {/* Project Icon */}
-        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-[#5664F5] to-[#4451d9] mb-4 mx-auto">
+        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-[#5664F5] to-[#4451d9] mb-3 mx-auto">
           <FaFolder className="text-white text-lg" />
         </div>
 
-        {/* Last Modified */}
-        <div className="text-xs text-gray-500">
+        {/* Metadata - Created At and Last Modified */}
+        <div className="text-xs text-gray-500 mb-3 space-y-1.5">
+          <div className="flex items-center gap-2 justify-center">
+            <FaClock className="text-gray-400" />
+            <span>Created {formatDate(metadata?.createdAt)}</span>
+          </div>
           <div className="flex items-center gap-2 justify-center">
             <FaCalendarAlt className="text-gray-400" />
-            <span>Updated {lastModified}</span>
+            <span>Modified {formatDate(metadata?.lastModified)}</span>
           </div>
         </div>
-      </div>
 
-      {/* Hover Action */}
-      <div className="px-4 sm:px-6 pb-4">
+        {/* View Project Button */}
         <button className="w-full py-2 text-sm font-medium text-[#5664F5] border border-[#5664F5] rounded-lg hover:bg-[#5664F5] hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
           View Project
         </button>
