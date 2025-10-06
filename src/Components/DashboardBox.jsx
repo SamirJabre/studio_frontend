@@ -38,6 +38,34 @@ function DashboardBox({ search }) {
     }
   };
 
+  const handleDeleteProject = async (projectId) => {
+    try {
+      await axios.delete(`/projects/${projectId}`);
+      setProjects(projects.filter((project) => project.id !== projectId));
+    } catch (error) {
+      console.error("Error deleting project:", error);
+    }
+  };
+
+  const handleDuplicateProject = async (project) => {
+    try {
+      const duplicatedProject = {
+        ...project,
+        id: undefined, // Let the server assign a new ID
+        title: `${project.title} (Copy)`,
+        metadata: {
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          version: 1,
+        },
+      };
+      const response = await axios.post("/projects", duplicatedProject);
+      setProjects([...projects, response.data]);
+    } catch (error) {
+      console.error("Error duplicating project:", error);
+    }
+  };
+
   // Filter projects based on search query
   const sortOrder = useSelector((state) => state.sort.sort);
   const sortedProjects = [...projects].sort((a, b) => {
@@ -80,19 +108,25 @@ function DashboardBox({ search }) {
           ? filteredProjects.map((project) => (
               <ProjectCard
                 key={project.id}
+                id={project.id}
                 title={project.title}
                 description={project.description}
                 metadata={project.metadata}
                 color={project.color}
+                onDelete={handleDeleteProject}
+                onDuplicate={() => handleDuplicateProject(project)}
               />
             ))
           : sortedProjects.map((project) => (
               <ProjectCard
                 key={project.id}
+                id={project.id}
                 title={project.title}
                 description={project.description}
                 metadata={project.metadata}
                 color={project.color}
+                onDelete={handleDeleteProject}
+                onDuplicate={() => handleDuplicateProject(project)}
               />
             ))}
       </div>

@@ -15,7 +15,7 @@
   ],
   "projects": [
     {
-      "id": 1,
+      "id": "1",
       "user_id": "76cd",
       "title": "E-commerce Website",
       "description": "A modern e-commerce platform built with React and Node.js featuring user authentication, payment integration, and inventory management.",
@@ -39,7 +39,7 @@
       }
     },
     {
-      "id": 2,
+      "id": "2",
       "user_id": "76cd",
       "title": "Mobile Banking App",
       "description": "Secure mobile banking application with biometric authentication, real-time transactions, and budget tracking features.",
@@ -63,7 +63,7 @@
       }
     },
     {
-      "id": 3,
+      "id": "3",
       "user_id": "76cd",
       "title": "Learning Management System",
       "description": "Comprehensive LMS platform for online education with video streaming, quiz systems, and progress tracking.",
@@ -87,7 +87,7 @@
       }
     },
     {
-      "id": 4,
+      "id": "4",
       "user_id": "76cd",
       "title": "Social Media Dashboard",
       "description": "Analytics dashboard for social media management with post scheduling, engagement metrics, and competitor analysis.",
@@ -111,7 +111,7 @@
       }
     },
     {
-      "id": 5,
+      "id": "5",
       "user_id": "7ed2",
       "title": "Healthcare Portal",
       "description": "Patient management system with appointment scheduling, medical records, and telemedicine integration.",
@@ -135,7 +135,7 @@
       }
     },
     {
-      "id": 6,
+      "id": "6",
       "user_id": "7ed2",
       "title": "Inventory Management",
       "description": "Real-time inventory tracking system with barcode scanning, supplier management, and automated reordering.",
@@ -157,27 +157,6 @@
         "lastModified": "2025-09-21T09:15:00.000Z",
         "version": 1
       }
-    },
-    {
-      "id": "7b13",
-      "title": "Samir Project",
-      "description": "just for testing ",
-      "color": "#EF4444",
-      "user_id": "76cd"
-    },
-    {
-      "id": "c33e",
-      "title": "asd",
-      "description": "asd",
-      "color": "#5664F5",
-      "nodes": [],
-      "edges": [],
-      "metadata": {
-        "createdAt": 1759750026575,
-        "lastModified": 1759750026575,
-        "version": 1
-      },
-      "user_id": "76cd"
     }
   ]
 }

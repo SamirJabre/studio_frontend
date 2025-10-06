@@ -53,18 +53,26 @@ const formatDate = (isoString) => {
   });
 };
 
-function ProjectCard({ title, description, metadata, color }) {
+function ProjectCard({
+  id,
+  title,
+  description,
+  metadata,
+  color,
+  onDelete,
+  onDuplicate,
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleDelete = () => {
-    // Add delete logic here
-    console.log("Delete project:", title);
+    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+      onDelete(id);
+    }
     setIsMenuOpen(false);
   };
 
   const handleDuplicate = () => {
-    // Add duplicate logic here
-    console.log("Duplicate project:", title);
+    onDuplicate();
     setIsMenuOpen(false);
   };
 
