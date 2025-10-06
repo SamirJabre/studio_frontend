@@ -3,10 +3,11 @@ import { useFormik } from "formik";
 import { string, object } from "yup";
 import Banner from "../Assets/Banners/LoginBanner.png";
 import AuthInput from "../Base/AuthInput";
-import db from "../db.json";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../Redux/Slices/authSlice.js";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:4000";
 
 function Login() {
   const dispatch = useDispatch();
@@ -57,9 +58,13 @@ function Login() {
 
   const handleLogin = async (values) => {
     try {
-      const user = db?.users?.find(
-        (u) => u.email === values.email && u.password === values.password
-      );
+      const response = await axios.get("/users", {
+        params: {
+          email: values.email,
+          password: values.password,
+        },
+      });
+      const user = response.data[0];
       if (user) {
         dispatch(login({ ...user, password: undefined }));
         localStorage.setItem("isAuthenticated", "true");
