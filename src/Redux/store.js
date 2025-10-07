@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./Slices/authSlice";
 import sortSlice from "./Slices/sortSlice";
+import leftPanelSlice from "./Slices/leftPanelSlice";
 import {
   persistStore,
   persistReducer,
@@ -16,6 +17,7 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 const rootReducer = combineReducers({
   auth: authReducer,
   sort: sortSlice,
+  leftPanel: leftPanelSlice,
 });
 
 const persistConfig = {
