@@ -25,7 +25,7 @@ function DashboardBox({ search }) {
     };
 
     fetchProjects();
-  }, [user_id, projects]);
+  }, [user_id]);
 
   const handleCreateProject = async (projectData) => {
     try {

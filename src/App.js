@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import axios from "axios";
 import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
+import Editor from "./Pages/Editor";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/editor" element={<Editor />} />
       </Routes>
     </BrowserRouter>
   );
