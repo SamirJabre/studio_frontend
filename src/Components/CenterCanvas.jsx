@@ -18,6 +18,7 @@ function CenterCanvas() {
   const navigate = useNavigate();
   const userId = useSelector((state) => state?.auth?.user?.id);
   const { id: projectId } = useParams();
+  const [project, setProject] = useState(null);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
@@ -25,7 +26,7 @@ function CenterCanvas() {
     const fetchData = async () => {
       try {
         const response = await axios.get(`/projects/${projectId}`);
-        console.log(response.data);
+        setProject(response.data);
         if (userId !== response.data.user_id) {
           navigate("/accessdenied");
         } else {
@@ -46,9 +47,19 @@ function CenterCanvas() {
   }, [navigate, projectId, userId]);
 
   const onNodesChange = useCallback(
-    (changes) =>
-      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    []
+    (changes) => {
+      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
+      console.log(changes[0]);
+      const { dragging } = changes[0];
+      if (dragging === false) {
+        axios.put(`projects/${projectId}`, {
+          ...project,
+          nodes,
+          edges,
+        });
+      }
+    },
+    [edges, nodes, project, projectId]
   );
   const onEdgesChange = useCallback(
     (changes) =>
