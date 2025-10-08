@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
-function EditorBar({ project, projectId }) {
+function EditorBar({ project, projectId, onProjectUpdate }) {
   const navigate = useNavigate();
   const selectedNode = useSelector((state) => state.node);
   console.log(selectedNode);
@@ -23,7 +23,8 @@ function EditorBar({ project, projectId }) {
   const handleDelete = async () => {
     try {
       if (!selectedNode.nodeId) return;
-      await axios.put(`/projects/${projectId}`, {
+
+      const updatedProject = {
         ...project,
         nodes: project.nodes.filter((node) => node.id !== selectedNode.nodeId),
         edges: project.edges.filter(
@@ -31,7 +32,14 @@ function EditorBar({ project, projectId }) {
             edge.source !== selectedNode.nodeId &&
             edge.target !== selectedNode.nodeId
         ),
-      });
+      };
+
+      await axios.put(`/projects/${projectId}`, updatedProject);
+
+      // Trigger project refresh in parent component
+      if (onProjectUpdate) {
+        onProjectUpdate(updatedProject);
+      }
     } catch (e) {
       console.log(e);
       return;

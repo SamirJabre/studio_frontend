@@ -33,9 +33,17 @@ function Editor() {
     fetchProject();
   }, [navigate, projectId]);
 
+  const handleProjectUpdate = (updatedProject) => {
+    setProject(updatedProject);
+  };
+
   return (
     <div className="w-screen h-screen flex justify-between items-center">
-      <EditorBar project={project} projectId={projectId} />
+      <EditorBar
+        project={project}
+        projectId={projectId}
+        onProjectUpdate={handleProjectUpdate}
+      />
       <LeftPanel />
       <CenterCanvas
         project={project}
