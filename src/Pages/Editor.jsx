@@ -16,7 +16,7 @@ function Editor() {
   }, [isAuthenticated, isAuthenticated2, navigate]);
 
   return (
-    <div className="w-screen h-screen flex justify-between items-center bg-red-500">
+    <div className="w-screen h-screen flex justify-between items-center">
       <LeftPanel />
       <CenterCanvas />
     </div>
