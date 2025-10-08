@@ -6,6 +6,8 @@ import axios from "axios";
 import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
 import Editor from "./Pages/Editor";
+import AccessDenied from "./Pages/AccessDenied";
+import ProjectNotFound from "./Pages/ProjectNotFound";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -41,7 +43,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/editor" element={<Editor />} />
+        <Route path="/editor/:id" element={<Editor />} />
+        <Route path="/accessdenied" element={<AccessDenied />} />
+        <Route path="/404" element={<ProjectNotFound />} />
       </Routes>
     </BrowserRouter>
   );

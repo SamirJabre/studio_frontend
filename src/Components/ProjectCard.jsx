@@ -7,6 +7,7 @@ import {
   FaCopy,
   FaClock,
 } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 // Helper function to format date
 const formatDate = (isoString) => {
@@ -62,6 +63,7 @@ function ProjectCard({
   onDelete,
   onDuplicate,
 }) {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleDelete = () => {
@@ -150,7 +152,10 @@ function ProjectCard({
         </div>
 
         {/* View Project Button */}
-        <button className="w-full py-2 text-sm font-medium text-[#5664F5] border border-[#5664F5] rounded-lg hover:bg-[#5664F5] hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
+        <button
+          onClick={() => navigate(`/editor/${id}`)}
+          className="w-full py-2 text-sm font-medium text-[#5664F5] border border-[#5664F5] rounded-lg hover:bg-[#5664F5] hover:text-white transition-all duration-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0"
+        >
           View Project
         </button>
       </div>
