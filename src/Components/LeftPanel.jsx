@@ -16,7 +16,7 @@ function LeftPanel() {
       {/* Toggle Button - Always Visible */}
       <button
         onClick={handleToggle}
-        className={`fixed top-4 z-50 bg-white shadow-lg rounded-r-lg p-3 hover:bg-[#5664F5] hover:text-white transition-all duration-500 group ${
+        className={`fixed top-5 z-50 bg-white shadow-lg rounded-r-lg p-3 hover:bg-[#5664F5] hover:text-white transition-all duration-500 group ${
           isOpen ? "left-72" : "left-0"
         }`}
         aria-label={isOpen ? "Close panel" : "Open panel"}

@@ -9,47 +9,50 @@ import {
   Background,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useNavigate, useParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
-function CenterCanvas() {
+function CenterCanvas({ project, projectId, user_id }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = useSelector((state) => state?.auth?.user?.id);
-  const { id: projectId } = useParams();
-  const [project, setProject] = useState(null);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/projects/${projectId}`);
-        setProject(response.data);
-        if (userId !== response.data.user_id) {
-          navigate("/accessdenied");
-        } else {
-          const { nodes, edges } = response.data;
-          setNodes(nodes);
-          setEdges(edges);
-        }
-      } catch (error) {
-        console.error("Error fetching graph data:", error);
-        console.log(error.response.status);
-        if (error.response.status === 404) {
-          navigate("/404");
-        }
-      }
-    };
+    // Wait until both IDs are available before deciding
+    if (userId == null || user_id == null) return;
 
-    fetchData();
-  }, [navigate, projectId, userId]);
+    // Compare after normalizing types
+    if (String(userId) === String(user_id)) {
+      const { nodes = [], edges = [] } = project || {};
+      setNodes(nodes);
+      setEdges(edges);
+    } else {
+      navigate("/accessdenied");
+    }
+  }, [userId, user_id, project, navigate]);
 
   const onNodesChange = useCallback(
     (changes) => {
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
-      console.log(changes[0]);
+      console.log(changes);
+      if (
+        changes.map((change) => change.type === "select") &&
+        changes.map((change) => change.selected).includes(true)
+      ) {
+        dispatch(setNodeId(changes.find((change) => change.selected).id));
+      } else if (
+        changes.map((change) => change.type === "position") &&
+        changes.map((change) => change.dragging).includes(false)
+      ) {
+        dispatch(setNodeId(changes.find((change) => !change.dragging).id));
+      } else {
+        dispatch(setNodeId(null));
+      }
       const { dragging } = changes[0];
       if (dragging === false) {
         axios.put(`projects/${projectId}`, {
@@ -59,7 +62,7 @@ function CenterCanvas() {
         });
       }
     },
-    [edges, nodes, project, projectId]
+    [dispatch, edges, nodes, project, projectId]
   );
   const onEdgesChange = useCallback(
     (changes) =>
@@ -72,7 +75,7 @@ function CenterCanvas() {
   );
   return (
     <>
-      <div className={`h-full w-full`}>
+      <div className={`h-full w-full z-30`}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

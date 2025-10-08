@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./Slices/authSlice";
 import sortSlice from "./Slices/sortSlice";
 import leftPanelSlice from "./Slices/leftPanelSlice";
+import nodeSlice from "./Slices/nodeSlice";
 import {
   persistStore,
   persistReducer,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   sort: sortSlice,
   leftPanel: leftPanelSlice,
+  node: nodeSlice,
 });
 
 const persistConfig = {
