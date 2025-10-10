@@ -1,128 +1,216 @@
-import { useEffect } from "react";
-import { useFormik } from "formik";
-import { string, object } from "yup";
-import Banner from "../Assets/Banners/LoginBanner.png";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import AuthBG from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
+import Toast from "../Base/Toast";
 import { useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../Redux/Slices/authSlice.js";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+import { useDispatch } from "react-redux";
+import { loginRequest } from "../APIS/authApi.js";
 
 function Login() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [touched, setTouched] = useState({ email: false, password: false });
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const EMAIL_REGEX = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+
+  const validate = useCallback(
+    (values) => {
+      const e = { email: "", password: "" };
+      if (!values.email) {
+        e.email = "Email is required.";
+      } else if (!EMAIL_REGEX.test(values.email)) {
+        e.email = "Enter a valid email address.";
+      }
+
+      if (!values.password) {
+        e.password = "Password is required.";
+      } else if (values.password.length < 5) {
+        e.password = "Password must be at least 5 characters.";
+      }
+      return e;
+    },
+    [EMAIL_REGEX]
+  );
 
   useEffect(() => {
-    if (isAuthenticated || isAuthenticated2) {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated, isAuthenticated2, navigate]);
+    setErrors(validate(formData));
+  }, [formData, validate]);
 
-  const userSchema = object({
-    email: string().email("Enter a valid email").required("Email is required"),
-    password: string()
-      .min(5, "Password must be at least 5 characters")
-      .required("Password is required"),
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
 
-  const {
-    values,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    isSubmitting,
-    status,
-    errors,
-    touched,
-  } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: userSchema,
-    onSubmit: async (values, actions) => {
-      const loginResult = await handleLogin(values);
-      if (loginResult === "success") {
-        actions.resetForm();
-        actions.setStatus("");
-        navigate("/dashboard");
-      } else {
-        actions.setStatus("Invalid email or password");
-      }
-      actions.setSubmitting(false);
-    },
-  });
+  // useEffect(() => {
+  //   if (isAuthenticated || isAuthenticated2) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [isAuthenticated, isAuthenticated2, navigate]);
 
-  const handleLogin = async (values) => {
-    try {
-      const response = await axios.get("/users", {
-        params: {
-          email: values.email,
-          password: values.password,
-        },
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setTouched({ email: true, password: true });
+
+    const currentErrors = validate(formData);
+    setErrors(currentErrors);
+    const hasErrors = Object.values(currentErrors).some(Boolean);
+    if (hasErrors) return;
+
+    setSubmitting(true);
+    const result = await loginRequest(
+      formData.email,
+      formData.password,
+      dispatch
+    );
+    setSubmitting(false);
+
+    if (result && result.status === "error") {
+      // Show error toast
+      setToast({
+        message: result.message || "Login failed.",
+        type: "error",
       });
-      const user = response.data[0];
-      if (user) {
-        dispatch(login({ ...user, password: undefined }));
-        localStorage.setItem("isAuthenticated", "true");
-        return "success";
-      } else {
-        console.error("Invalid credentials");
-        return "error";
-      }
-    } catch (error) {
-      console.error("Login failed", error);
-      return "error";
+      // Also set field error for inline display
+      setErrors((prev) => ({
+        ...prev,
+        password: result.message || "Login failed.",
+      }));
+    } else if (result && result.status === "success") {
+      // Show success toast
+      setToast({
+        message: "Login successful! Redirecting...",
+        type: "success",
+      });
+      // Wait 1.5 seconds before navigating to dashboard
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
     }
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-gray-200">
-      <div className="w-[400px] sm:w-[600px] h-fit bg-[#F0F1FF] shadow-2xl flex items-center justify-center flex-col gap-y-2 rounded-2xl p-5">
-        <div className="w-full h-[40%]">
+    <div className="w-screen h-screen flex justify-center items-center bg-gray-200 p-4">
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={toast.type === "success" ? 1500 : 4000}
+        />
+      )}
+
+      <div className="w-full max-w-[1200px] h-auto md:h-[700px] bg-white shadow-2xl flex flex-col md:flex-row rounded-2xl overflow-hidden">
+        {/* Left Half - Image Placeholder (Hidden on mobile) */}
+        <div className="hidden md:flex md:w-1/2 items-center justify-center">
           <img
-            src={Banner}
-            alt="Login Banner"
-            className="w-full h-full object-cover rounded-lg"
+            src={AuthBG}
+            alt="Login Background"
+            className="object-cover w-full h-full"
           />
         </div>
-        <h1 className="text-3xl font-bold my-10">Welcome to Studio</h1>
-        <form
-          onSubmit={handleSubmit}
-          className="w-full h-fit flex flex-col items-center justify-between"
-        >
-          <AuthInput
-            type="email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={errors.email}
-            touched={touched.email}
-          />
-          <AuthInput
-            type="password"
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={errors.password}
-            touched={touched.password}
-          />
-          {status && (
-            <p className="w-full text-red-600 text-md mb-2">{status}</p>
-          )}
-          <button
-            className="w-full h-[55px] rounded-lg bg-[#5664F5] text-xl text-white font-bold"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            Login
-          </button>
-        </form>
+
+        {/* Right Half - Login Form */}
+        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 md:py-0">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Login</h1>
+            <p className="text-sm md:text-base text-gray-500">
+              Welcome back! Please login to your account
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="w-full">
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Email
+              </label>
+              <AuthInput
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                error={errors.email}
+                touched={touched.email}
+                required
+                pattern={EMAIL_REGEX.source}
+                autoComplete="email"
+              />
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Password
+              </label>
+              <AuthInput
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                error={errors.password}
+                touched={touched.password}
+                required
+                minLength={5}
+                autoComplete="current-password"
+              />
+            </div>
+
+            {/* Remember Me Checkbox */}
+            <div className="mb-6 flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                className="w-4 h-4 rounded border-gray-300 focus:ring-[#5664F5] accent-[#5664F5]"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="ml-2 text-sm text-gray-700"
+              >
+                Remember me
+              </label>
+            </div>
+
+            {/* Login Button */}
+            <button
+              className="w-full h-[45px] md:h-[50px] rounded-lg bg-[#5664F5] text-base md:text-lg text-white font-semibold hover:bg-[#4553E4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              type="submit"
+              disabled={submitting || Object.values(errors).some(Boolean)}
+            >
+              {submitting ? "Signing in..." : "Login"}
+            </button>
+          </form>
+
+          {/* Sign Up Link */}
+          <div className="mt-4 md:mt-6 text-center">
+            <span className="text-sm md:text-base text-gray-600">
+              New User?{" "}
+            </span>
+            <button
+              onClick={() => navigate("/register")}
+              className="text-sm md:text-base text-[#5664F5] font-semibold hover:underline"
+            >
+              Signup
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

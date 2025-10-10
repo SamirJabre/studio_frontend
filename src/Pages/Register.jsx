@@ -1,135 +1,242 @@
-import { useEffect } from "react";
-import { useFormik } from "formik";
-import { string, object } from "yup";
-import Banner from "../Assets/Banners/LoginBanner.png";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import AuthBanner from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
+import Toast from "../Base/Toast";
 import { useNavigate } from "react-router";
-import db from "../db.json";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../Redux/Slices/authSlice.js";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+import { registerRequest } from "../APIS/authApi.js";
 
 function Register() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+  });
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const EMAIL_REGEX = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
+
+  const validate = useCallback(
+    (values) => {
+      const e = { name: "", email: "", password: "" };
+
+      // Name validation
+      if (!values.name) {
+        e.name = "Name is required.";
+      } else if (values.name.length > 15) {
+        e.name = "Name must not exceed 15 characters.";
+      }
+
+      // Email validation
+      if (!values.email) {
+        e.email = "Email is required.";
+      } else if (!EMAIL_REGEX.test(values.email)) {
+        e.email = "Enter a valid email address.";
+      }
+
+      // Password validation
+      if (!values.password) {
+        e.password = "Password is required.";
+      } else if (values.password.length < 5) {
+        e.password = "Password must be at least 5 characters.";
+      }
+
+      return e;
+    },
+    [EMAIL_REGEX]
+  );
 
   useEffect(() => {
-    if (isAuthenticated || isAuthenticated2) {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated, isAuthenticated2, navigate]);
+    setErrors(validate(formData));
+  }, [formData, validate]);
 
-  const userSchema = object({
-    name: string().required("Name is required"),
-    email: string().email("Enter a valid email").required("Email is required"),
-    password: string()
-      .min(5, "Password must be at least 5 characters")
-      .required("Password is required"),
-  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
 
-  const {
-    values,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    isSubmitting,
-    status,
-    errors,
-    touched,
-  } = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
-    validationSchema: userSchema,
-    onSubmit: async (values, actions) => {
-      const registerResult = await handleRegister(values);
-      if (registerResult === "success") {
-        actions.resetForm();
-        actions.setStatus("");
+  // useEffect(() => {
+  //   if (isAuthenticated || isAuthenticated2) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [isAuthenticated, isAuthenticated2, navigate]);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setTouched({ name: true, email: true, password: true });
+
+    const currentErrors = validate(formData);
+    setErrors(currentErrors);
+    const hasErrors = Object.values(currentErrors).some(Boolean);
+    if (hasErrors) return;
+
+    setSubmitting(true);
+    const result = await registerRequest(
+      formData.name,
+      formData.email,
+      formData.password,
+      dispatch
+    );
+    setSubmitting(false);
+
+    if (result && result.status === "error") {
+      // Show error toast
+      setToast({
+        message: result.message || "Registration failed.",
+        type: "error",
+      });
+      // Also set field error for inline display
+      setErrors((prev) => ({
+        ...prev,
+        email: result.message || "Registration failed.",
+      }));
+    } else if (result && result.status === "success") {
+      // Show success toast
+      setToast({
+        message: "Registration successful! Redirecting...",
+        type: "success",
+      });
+      // Wait 1.5 seconds before navigating to dashboard
+      setTimeout(() => {
         navigate("/dashboard");
-      } else {
-        actions.setStatus("Used email");
-      }
-      actions.setSubmitting(false);
-    },
-  });
-
-  const handleRegister = async (values) => {
-    try {
-      const user = db?.users?.find((u) => u.email === values.email);
-      if (user) {
-        console.log("Register Failed, User with this email already exist");
-        return "error";
-      } else {
-        await axios.post("/users", values);
-        dispatch(login({ ...user, password: undefined }));
-        localStorage.setItem("isAuthenticated", "true");
-        return "success";
-      }
-    } catch (error) {
-      console.error("Login failed", error);
-      return "error";
+      }, 1500);
     }
   };
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-gray-200">
-      <div className="w-[400px] sm:w-[600px] h-fit bg-[#F0F1FF] shadow-2xl flex items-center justify-center flex-col gap-y-2 rounded-2xl p-5">
-        <div className="w-full h-[40%]">
+    <div className="w-screen h-screen flex justify-center items-center bg-gray-200 p-4">
+      {/* Toast Notification */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+          duration={toast.type === "success" ? 1500 : 4000}
+        />
+      )}
+
+      <div className="w-full max-w-[1200px] h-auto md:h-[700px] bg-white shadow-2xl flex flex-col md:flex-row rounded-2xl overflow-hidden">
+        {/* Left Half - Image (Hidden on mobile) */}
+        <div className="hidden md:flex md:w-1/2 items-center justify-center">
           <img
-            src={Banner}
-            alt="Login Banner"
-            className="w-full h-full object-cover rounded-lg"
+            src={AuthBanner}
+            alt="Register Background"
+            className="object-cover w-full h-full"
           />
         </div>
-        <h1 className="text-3xl font-bold my-10">Welcome to Studio</h1>
-        <form
-          onSubmit={handleSubmit}
-          className="w-full h-fit flex flex-col items-center justify-between"
-        >
-          <AuthInput
-            type="name"
-            name="name"
-            value={values.name}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={errors.name}
-            touched={touched.name}
-          />
-          <AuthInput
-            type="email"
-            name="email"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={errors.email}
-            touched={touched.email}
-          />
-          <AuthInput
-            type="password"
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            error={errors.password}
-            touched={touched.password}
-          />
-          {status && (
-            <p className="w-full text-red-600 text-md mb-2">{status}</p>
-          )}
-          <button
-            className="w-full h-[55px] rounded-lg bg-[#5664F5] text-xl text-white font-bold"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            Login
-          </button>
-        </form>
+
+        {/* Right Half - Register Form */}
+        <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 md:py-0">
+          <div className="mb-6 md:mb-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">Register</h1>
+            <p className="text-sm md:text-base text-gray-500">
+              Create your account to get started
+            </p>
+          </div>
+
+          <form onSubmit={handleRegister} className="w-full">
+            {/* Name Field */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Name
+              </label>
+              <AuthInput
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+                error={errors.name}
+                touched={touched.name}
+                required
+                maxLength={15}
+                autoComplete="name"
+              />
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Email
+              </label>
+              <AuthInput
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                error={errors.email}
+                touched={touched.email}
+                required
+                pattern={EMAIL_REGEX.source}
+                autoComplete="email"
+              />
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Password
+              </label>
+              <AuthInput
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                error={errors.password}
+                touched={touched.password}
+                required
+                minLength={5}
+                autoComplete="new-password"
+              />
+            </div>
+
+            {/* Register Button */}
+            <button
+              className="w-full h-[45px] md:h-[50px] rounded-lg bg-[#5664F5] text-base md:text-lg text-white font-semibold hover:bg-[#4553E4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              type="submit"
+              disabled={submitting || Object.values(errors).some(Boolean)}
+            >
+              {submitting ? "Creating account..." : "Register"}
+            </button>
+          </form>
+
+          {/* Login Link */}
+          <div className="mt-4 md:mt-6 text-center">
+            <span className="text-sm md:text-base text-gray-600">
+              Already have an account?{" "}
+            </span>
+            <button
+              onClick={() => navigate("/login")}
+              className="text-sm md:text-base text-[#5664F5] font-semibold hover:underline"
+            >
+              Login
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

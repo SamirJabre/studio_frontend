@@ -119,18 +119,34 @@
       "nodes": [
         {
           "id": "1",
-          "position": { "x": 0, "y": 0 },
-          "data": { "label": "Node 1" },
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "data": {
+            "label": "Node 1"
+          },
           "type": "input"
         },
         {
           "id": "2",
-          "position": { "x": 0, "y": 100 },
-          "data": { "label": "Node 2" },
+          "position": {
+            "x": 0,
+            "y": 100
+          },
+          "data": {
+            "label": "Node 2"
+          },
           "type": "default"
         }
       ],
-      "edges": [{ "id": "1-2", "source": "1", "target": "2" }],
+      "edges": [
+        {
+          "id": "1-2",
+          "source": "1",
+          "target": "2"
+        }
+      ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
         "lastModified": "2025-09-28T14:30:00.000Z",
