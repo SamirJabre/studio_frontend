@@ -3,7 +3,7 @@ import AuthBanner from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
 import Toast from "../Base/Toast";
 import { useNavigate } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerRequest } from "../APIS/authApi.js";
 
 function Register() {
