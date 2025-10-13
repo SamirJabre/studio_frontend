@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
 import SearchInput from "../Base/SearchInput.jsx";
 import ProjectConfiguration from "./ProjectConfiguration.jsx";
+import Filter from "../Base/Filter.jsx";
 import { FaFolder } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
@@ -73,12 +74,17 @@ function DashboardBox() {
   };
 
   // Filter projects based on search query
-  const sortOrder = useSelector((state) => state.sort.sort);
+  const filter = useSelector((state) => state.filter.filter);
   const sortedProjects = [...projects].sort((a, b) => {
-    if (sortOrder === "Ascending") {
+    if (filter === "Ascending") {
       return a.title.localeCompare(b.title);
+    } else if (filter === "Descending") {
+      return b.title.localeCompare(a.title);
+    } else {
+      return (
+        new Date(b.metadata.lastModified) - new Date(a.metadata.lastModified)
+      );
     }
-    return b.title.localeCompare(a.title);
   });
   // If there's a search query, filter projects
   const filteredProjects = projects.filter((project) =>
@@ -118,8 +124,8 @@ function DashboardBox() {
           </div>
 
           {/* Filter Placeholder */}
-          <div className="bg-gray-200 px-4 py-2 rounded-lg border border-gray-300">
-            <p className="text-sm font-medium text-gray-700">Filter</p>
+          <div className="bg-gray-200 rounded-lg border border-gray-300">
+            <Filter />
           </div>
         </div>
       </div>
