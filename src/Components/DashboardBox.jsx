@@ -6,14 +6,12 @@ import Filter from "../Base/Filter.jsx";
 import { FaFolder } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
-import axios from "axios";
 import {
   fetchProjects,
   createProject,
   deleteProject,
   duplicateProject,
 } from "../APIS/projectsApi.js";
-axios.defaults.baseURL = "http://localhost:4000";
 
 function DashboardBox() {
   const dispatch = useDispatch();
