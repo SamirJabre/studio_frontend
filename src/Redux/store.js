@@ -3,6 +3,7 @@ import authReducer from "./Slices/authSlice";
 import filterSlice from "./Slices/filterSlice";
 import leftPanelSlice from "./Slices/leftPanelSlice";
 import nodeSlice from "./Slices/nodeSlice";
+import projectsSlice from "./Slices/projectsSlice";
 import {
   persistStore,
   persistReducer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   filter: filterSlice,
   leftPanel: leftPanelSlice,
   node: nodeSlice,
+  projects: projectsSlice,
 });
 
 const persistConfig = {

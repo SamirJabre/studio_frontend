@@ -4,74 +4,59 @@ import SearchInput from "../Base/SearchInput.jsx";
 import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import Filter from "../Base/Filter.jsx";
 import { FaFolder } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
+import { fetchProjects, createProject } from "../APIS/projectsApi.js";
 axios.defaults.baseURL = "http://localhost:4000";
 
 function DashboardBox() {
-  const [projects, setProjects] = useState([]);
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.projects);
+
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const user_id = useSelector((state) => state?.auth?.user?.id);
+  // const user_id = useSelector((state) => state?.auth?.user?.id);
 
   const handleSearch = (query) => {
     setSearch(query);
   };
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get("/projects", {
-          params: { user_id },
-        });
-        setProjects(response.data);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
-    fetchProjects();
-  }, [user_id]);
+    fetchProjects(dispatch);
+  }, [dispatch]);
 
   const handleCreateProject = async (projectData) => {
-    try {
-      const newProject = { ...projectData, user_id };
-      const response = await axios.post("/projects", newProject);
-      setProjects([...projects, response.data]);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Error creating project:", error);
-    }
+    createProject(projectData, dispatch);
   };
 
-  const handleDeleteProject = async (projectId) => {
-    try {
-      await axios.delete(`/projects/${projectId}`);
-      setProjects(projects.filter((project) => project.id !== projectId));
-    } catch (error) {
-      console.error("Error deleting project:", error);
-    }
-  };
+  // const handleDeleteProject = async (projectId) => {
+  //   try {
+  //     await axios.delete(`/projects/${projectId}`);
+  //     setProjects(projects.filter((project) => project.id !== projectId));
+  //   } catch (error) {
+  //     console.error("Error deleting project:", error);
+  //   }
+  // };
 
-  const handleDuplicateProject = async (project) => {
-    try {
-      const duplicatedProject = {
-        ...project,
-        id: undefined, // Let the server assign a new ID
-        title: `${project.title} (Copy)`,
-        metadata: {
-          createdAt: new Date().toISOString(),
-          lastModified: new Date().toISOString(),
-          version: 1,
-        },
-      };
-      const response = await axios.post("/projects", duplicatedProject);
-      setProjects([...projects, response.data]);
-    } catch (error) {
-      console.error("Error duplicating project:", error);
-    }
-  };
+  // const handleDuplicateProject = async (project) => {
+  //   try {
+  //     const duplicatedProject = {
+  //       ...project,
+  //       id: undefined, // Let the server assign a new ID
+  //       title: `${project.title} (Copy)`,
+  //       metadata: {
+  //         createdAt: new Date().toISOString(),
+  //         lastModified: new Date().toISOString(),
+  //         version: 1,
+  //       },
+  //     };
+  //     const response = await axios.post("/projects", duplicatedProject);
+  //     setProjects([...projects, response.data]);
+  //   } catch (error) {
+  //     console.error("Error duplicating project:", error);
+  //   }
+  // };
 
   // Filter projects based on search query
   const filter = useSelector((state) => state.filter.filter);
@@ -86,7 +71,6 @@ function DashboardBox() {
       );
     }
   });
-  // If there's a search query, filter projects
   const filteredProjects = projects.filter((project) =>
     project.title.toLowerCase().includes(search.toLowerCase())
   );
@@ -141,8 +125,8 @@ function DashboardBox() {
                 description={project.description}
                 metadata={project.metadata}
                 color={project.color}
-                onDelete={handleDeleteProject}
-                onDuplicate={() => handleDuplicateProject(project)}
+                // onDelete={handleDeleteProject}
+                // onDuplicate={() => handleDuplicateProject(project)}
               />
             ))
           : sortedProjects.map((project) => (
@@ -153,8 +137,8 @@ function DashboardBox() {
                 description={project.description}
                 metadata={project.metadata}
                 color={project.color}
-                onDelete={handleDeleteProject}
-                onDuplicate={() => handleDuplicateProject(project)}
+                // onDelete={handleDeleteProject}
+                // onDuplicate={() => handleDuplicateProject(project)}
               />
             ))}
       </div>
