@@ -1,9 +1,12 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { setProjects, addProject } from "../Redux/Slices/projectsSlice.js";
+import {
+  setProjects,
+  addProject,
+  removeProject,
+} from "../Redux/Slices/projectsSlice.js";
 axios.defaults.baseURL = "http://localhost:4000";
 
-// Add request interceptor to automatically include Authorization header
 axios.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -26,6 +29,7 @@ export const fetchProjects = async (dispatch) => {
       },
     });
     dispatch(setProjects(response.data));
+    setProjects(response.data);
   } catch (error) {
     console.error("Error fetching projects:", error);
   }
@@ -41,5 +45,33 @@ export const createProject = async (projectData, dispatch) => {
     dispatch(addProject(response.data));
   } catch (error) {
     console.error("Error creating project:", error);
+  }
+};
+
+export const deleteProject = async (projectId, dispatch) => {
+  try {
+    await axios.delete(`/projects/${projectId}`);
+    dispatch(removeProject(projectId));
+  } catch (error) {
+    console.error("Error deleting project:", error);
+  }
+};
+
+export const duplicateProject = async (project, dispatch) => {
+  try {
+    const duplicatedProject = {
+      ...project,
+      id: undefined,
+      title: `${project.title} (Copy)`,
+      metadata: {
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        version: 1,
+      },
+    };
+    const response = await axios.post("/projects", duplicatedProject);
+    dispatch(addProject(response.data));
+  } catch (error) {
+    console.error("Error duplicating project:", error);
   }
 };

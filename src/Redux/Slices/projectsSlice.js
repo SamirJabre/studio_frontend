@@ -8,22 +8,18 @@ export const projectsSlice = createSlice({
       state.push(...action.payload);
     },
     addProject: (state, action) => {
-      state.push(...action.payload);
+      state.push(action.payload);
     },
-    // updateProject: (state, action) => {
-    //   const index = state.findIndex(
-    //     (project) => project.id === action.payload.id
-    //   );
-    //   if (index !== -1) {
-    //     state[index] = action.payload;
-    //   }
-    // },
-    // deleteProject: (state, action) => {
-    //   return state.filter((project) => project.id !== action.payload);
-    // },
+    removeProject: (state, action) => {
+      return state.filter((project) => project.id !== action.payload);
+    },
+    emptyProjects: () => {
+      return [];
+    },
   },
 });
 
-export const { setProjects, addProject } = projectsSlice.actions;
+export const { setProjects, addProject, emptyProjects, removeProject } =
+  projectsSlice.actions;
 
 export default projectsSlice.reducer;

@@ -7,7 +7,12 @@ import { FaFolder } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
-import { fetchProjects, createProject } from "../APIS/projectsApi.js";
+import {
+  fetchProjects,
+  createProject,
+  deleteProject,
+  duplicateProject,
+} from "../APIS/projectsApi.js";
 axios.defaults.baseURL = "http://localhost:4000";
 
 function DashboardBox() {
@@ -30,37 +35,23 @@ function DashboardBox() {
     createProject(projectData, dispatch);
   };
 
-  // const handleDeleteProject = async (projectId) => {
-  //   try {
-  //     await axios.delete(`/projects/${projectId}`);
-  //     setProjects(projects.filter((project) => project.id !== projectId));
-  //   } catch (error) {
-  //     console.error("Error deleting project:", error);
-  //   }
-  // };
+  const handleDeleteProject = async (projectId) => {
+    deleteProject(projectId, dispatch);
+  };
 
-  // const handleDuplicateProject = async (project) => {
-  //   try {
-  //     const duplicatedProject = {
-  //       ...project,
-  //       id: undefined, // Let the server assign a new ID
-  //       title: `${project.title} (Copy)`,
-  //       metadata: {
-  //         createdAt: new Date().toISOString(),
-  //         lastModified: new Date().toISOString(),
-  //         version: 1,
-  //       },
-  //     };
-  //     const response = await axios.post("/projects", duplicatedProject);
-  //     setProjects([...projects, response.data]);
-  //   } catch (error) {
-  //     console.error("Error duplicating project:", error);
-  //   }
-  // };
+  const handleDuplicateProject = async (project) => {
+    duplicateProject(project, dispatch);
+  };
 
-  // Filter projects based on search query
+  // Filter and sort projects based on search query and filter
   const filter = useSelector((state) => state.filter.filter);
-  const sortedProjects = [...projects].sort((a, b) => {
+
+  // First filter by search, then sort
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const sortedProjects = [...filteredProjects].sort((a, b) => {
     if (filter === "Ascending") {
       return a.title.localeCompare(b.title);
     } else if (filter === "Descending") {
@@ -71,9 +62,6 @@ function DashboardBox() {
       );
     }
   });
-  const filteredProjects = projects.filter((project) =>
-    project.title.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <div className="w-full min-h-fit bg-gray-50 rounded-xl p-4 sm:p-6 shadow-sm transition-all duration-300 ease-in-out overflow-hidden">
@@ -116,31 +104,18 @@ function DashboardBox() {
 
       {/* Responsive Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 auto-rows-fr w-full">
-        {search
-          ? filteredProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.title}
-                description={project.description}
-                metadata={project.metadata}
-                color={project.color}
-                // onDelete={handleDeleteProject}
-                // onDuplicate={() => handleDuplicateProject(project)}
-              />
-            ))
-          : sortedProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                id={project.id}
-                title={project.title}
-                description={project.description}
-                metadata={project.metadata}
-                color={project.color}
-                // onDelete={handleDeleteProject}
-                // onDuplicate={() => handleDuplicateProject(project)}
-              />
-            ))}
+        {sortedProjects.map((project) => (
+          <ProjectCard
+            key={project.id}
+            id={project.id}
+            title={project.title}
+            description={project.description}
+            metadata={project.metadata}
+            color={project.color}
+            onDelete={handleDeleteProject}
+            onDuplicate={() => handleDuplicateProject(project)}
+          />
+        ))}
       </div>
 
       {/* Empty State (if no projects) */}

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { logout } from "../Redux/Slices/authSlice.js";
+import { emptyProjects } from "../Redux/Slices/projectsSlice.js";
 import { useNavigate } from "react-router";
 
 function Navbar() {
@@ -30,6 +31,7 @@ function Navbar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(logout());
+    dispatch(emptyProjects());
     navigate("/login");
   };
 
