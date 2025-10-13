@@ -43,14 +43,6 @@ function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  // const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
-
-  // useEffect(() => {
-  //   if (isAuthenticated || isAuthenticated2) {
-  //     navigate("/dashboard");
-  //   }
-  // }, [isAuthenticated, isAuthenticated2, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -75,18 +67,16 @@ function Login() {
         message: result.message || "Login failed.",
         type: "error",
       });
-      // Also set field error for inline display
       setErrors((prev) => ({
         ...prev,
         password: result.message || "Login failed.",
       }));
     } else if (result && result.status === "success") {
-      // Show success toast
       setToast({
         message: "Login successful! Redirecting...",
         type: "success",
       });
-      // Wait 1.5 seconds before navigating to dashboard
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
@@ -106,7 +96,6 @@ function Login() {
       )}
 
       <div className="w-full max-w-[1200px] h-auto md:h-[700px] bg-white shadow-2xl flex flex-col md:flex-row rounded-2xl overflow-hidden">
-        {/* Left Half - Image Placeholder (Hidden on mobile) */}
         <div className="hidden md:flex md:w-1/2 items-center justify-center">
           <img
             src={AuthBG}
@@ -115,7 +104,6 @@ function Login() {
           />
         </div>
 
-        {/* Right Half - Login Form */}
         <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 md:py-0">
           <div className="mb-6 md:mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Login</h1>
@@ -149,7 +137,6 @@ function Login() {
               />
             </div>
 
-            {/* Password Field */}
             <div>
               <label
                 htmlFor="password"
@@ -173,7 +160,6 @@ function Login() {
               />
             </div>
 
-            {/* Remember Me Checkbox */}
             <div className="mb-6 flex items-center">
               <input
                 type="checkbox"
@@ -188,7 +174,6 @@ function Login() {
               </label>
             </div>
 
-            {/* Login Button */}
             <button
               className="w-full h-[45px] md:h-[50px] rounded-lg bg-[#5664F5] text-base md:text-lg text-white font-semibold hover:bg-[#4553E4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               type="submit"
@@ -198,7 +183,6 @@ function Login() {
             </button>
           </form>
 
-          {/* Sign Up Link */}
           <div className="mt-4 md:mt-6 text-center">
             <span className="text-sm md:text-base text-gray-600">
               New User?{" "}

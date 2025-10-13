@@ -27,21 +27,18 @@ function Register() {
     (values) => {
       const e = { name: "", email: "", password: "" };
 
-      // Name validation
       if (!values.name) {
         e.name = "Name is required.";
       } else if (values.name.length > 15) {
         e.name = "Name must not exceed 15 characters.";
       }
 
-      // Email validation
       if (!values.email) {
         e.email = "Email is required.";
       } else if (!EMAIL_REGEX.test(values.email)) {
         e.email = "Enter a valid email address.";
       }
 
-      // Password validation
       if (!values.password) {
         e.password = "Password is required.";
       } else if (values.password.length < 5) {
@@ -87,23 +84,19 @@ function Register() {
     setSubmitting(false);
 
     if (result && result.status === "error") {
-      // Show error toast
       setToast({
         message: result.message || "Registration failed.",
         type: "error",
       });
-      // Also set field error for inline display
       setErrors((prev) => ({
         ...prev,
         email: result.message || "Registration failed.",
       }));
     } else if (result && result.status === "success") {
-      // Show success toast
       setToast({
         message: "Registration successful! Redirecting...",
         type: "success",
       });
-      // Wait 1.5 seconds before navigating to dashboard
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
@@ -112,7 +105,6 @@ function Register() {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gray-200 p-4">
-      {/* Toast Notification */}
       {toast && (
         <Toast
           message={toast.message}
@@ -123,7 +115,6 @@ function Register() {
       )}
 
       <div className="w-full max-w-[1200px] h-auto md:h-[700px] bg-white shadow-2xl flex flex-col md:flex-row rounded-2xl overflow-hidden">
-        {/* Left Half - Image (Hidden on mobile) */}
         <div className="hidden md:flex md:w-1/2 items-center justify-center">
           <img
             src={AuthBanner}
@@ -132,7 +123,6 @@ function Register() {
           />
         </div>
 
-        {/* Right Half - Register Form */}
         <div className="w-full md:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-16 py-8 md:py-0">
           <div className="mb-6 md:mb-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Register</h1>
@@ -142,7 +132,6 @@ function Register() {
           </div>
 
           <form onSubmit={handleRegister} className="w-full">
-            {/* Name Field */}
             <div>
               <label
                 htmlFor="name"
@@ -166,7 +155,6 @@ function Register() {
               />
             </div>
 
-            {/* Email Field */}
             <div>
               <label
                 htmlFor="email"
@@ -190,7 +178,6 @@ function Register() {
               />
             </div>
 
-            {/* Password Field */}
             <div>
               <label
                 htmlFor="password"
@@ -214,7 +201,6 @@ function Register() {
               />
             </div>
 
-            {/* Register Button */}
             <button
               className="w-full h-[45px] md:h-[50px] rounded-lg bg-[#5664F5] text-base md:text-lg text-white font-semibold hover:bg-[#4553E4] transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
               type="submit"
@@ -224,7 +210,6 @@ function Register() {
             </button>
           </form>
 
-          {/* Login Link */}
           <div className="mt-4 md:mt-6 text-center">
             <span className="text-sm md:text-base text-gray-600">
               Already have an account?{" "}
