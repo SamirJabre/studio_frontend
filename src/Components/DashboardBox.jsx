@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
+import SearchInput from "../Base/SearchInput.jsx";
 import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import { FaFolder } from "react-icons/fa";
 import { useSelector } from "react-redux";
@@ -7,10 +8,15 @@ import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
-function DashboardBox({ search }) {
+function DashboardBox() {
   const [projects, setProjects] = useState([]);
+  const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user_id = useSelector((state) => state?.auth?.user?.id);
+
+  const handleSearch = (query) => {
+    setSearch(query);
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -81,25 +87,41 @@ function DashboardBox({ search }) {
 
   return (
     <div className="w-full min-h-fit bg-gray-50 rounded-xl p-4 sm:p-6 shadow-sm transition-all duration-300 ease-in-out overflow-hidden">
-      {/* Header */}
-      <div className="ww-full h-fit flex justify-between items-center">
-        <div className="mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
-            Your Projects
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600">
-            Manage and view all your active projects
-          </p>
+      {/* Header Section */}
+      <div className="w-full mb-6">
+        {/* Title and Create Button Row */}
+        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div className="flex-1">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1">
+              Your Projects
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600">
+              Manage and view all your active projects
+            </p>
+          </div>
+          <button
+            className="bg-[#5664F5] text-white flex items-center justify-center gap-1 px-4 py-2.5 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all hover:bg-[#4451d9] duration-200 whitespace-nowrap"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <AddIcon fontSize="small" />
+            <span className="font-semibold">Create Project</span>
+          </button>
         </div>
-        <button
-          className="bg-[#5664F5] text-white flex items-center justify-center pl-1 pr-2 py-2 rounded-md hover:-translate-y-1 hover:scale-105 transition-all hover:bg-[#4451d9] duration-200"
-          onClick={() => setIsModalOpen(true)}
-        >
-          <span>
-            <AddIcon />
-          </span>
-          <span className="font-semibold ">Create Project</span>
-        </button>
+
+        {/* Search and Filter Row */}
+        <div className="w-full flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <p className="text-sm font-medium text-gray-700 whitespace-nowrap">
+              Search for Projects
+            </p>
+            <SearchInput handleSearch={handleSearch} />
+          </div>
+
+          {/* Filter Placeholder */}
+          <div className="bg-gray-200 px-4 py-2 rounded-lg border border-gray-300">
+            <p className="text-sm font-medium text-gray-700">Filter</p>
+          </div>
+        </div>
       </div>
 
       {/* Responsive Grid */}
