@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
@@ -11,14 +10,6 @@ function Editor() {
   const projectId = useParams().id;
   const navigate = useNavigate();
   const [project, setProject] = useState([]);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const isAuthenticated2 = JSON.parse(localStorage.getItem("isAuthenticated"));
-
-  useEffect(() => {
-    if (!isAuthenticated || !isAuthenticated2) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, isAuthenticated2, navigate]);
 
   useEffect(() => {
     const fetchProject = async () => {

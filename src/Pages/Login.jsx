@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import AuthBG from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
 import Toast from "../Base/Toast";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { loginRequest } from "../APIS/authApi.js";
 
@@ -43,6 +43,7 @@ function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -78,7 +79,12 @@ function Login() {
       });
 
       setTimeout(() => {
-        navigate("/dashboard");
+        const redirectTo =
+          (location.state &&
+            location.state.from &&
+            location.state.from.pathname) ||
+          "/dashboard";
+        navigate(redirectTo);
       }, 1500);
     }
   };
