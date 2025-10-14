@@ -3,8 +3,6 @@ import { FaLeftLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { deleteNode } from "../APIS/editorApi.js";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
 
 function EditorBar({ project, projectId, onProjectUpdate }) {
   const navigate = useNavigate();

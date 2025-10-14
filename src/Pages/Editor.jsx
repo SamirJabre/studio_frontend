@@ -3,9 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
 import EditorBar from "../Components/EditorBar";
-import axios from "axios";
 import { fetchProject } from "../APIS/editorApi";
-axios.defaults.baseURL = "http://localhost:4000";
 
 function Editor() {
   const projectId = useParams().id;

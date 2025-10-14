@@ -74,3 +74,15 @@ export const duplicateProject = async (project, dispatch) => {
     console.error("Error duplicating project:", error);
   }
 };
+
+export const dragNodes = async (project, projectId, nodes, edges) => {
+  try {
+    await axios.put(`projects/${projectId}`, {
+      ...project,
+      nodes,
+      edges,
+    });
+  } catch (error) {
+    console.error("Error dragging nodes:", error);
+  }
+};

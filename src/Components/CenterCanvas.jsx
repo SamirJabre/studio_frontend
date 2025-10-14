@@ -12,8 +12,7 @@ import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+import { dragNodes } from "../APIS/projectsApi.js";
 
 function CenterCanvas({ project, projectId, user_id }) {
   const dispatch = useDispatch();
@@ -25,6 +24,7 @@ function CenterCanvas({ project, projectId, user_id }) {
   useEffect(() => {
     // Wait until both IDs are available before deciding
     if (userId == null || user_id == null) return;
+    project.nodes.length === 0 && dispatch(setNodeId(null));
 
     // Compare after normalizing types
     if (String(userId) === String(user_id)) {
@@ -34,7 +34,7 @@ function CenterCanvas({ project, projectId, user_id }) {
     } else {
       navigate("/accessdenied");
     }
-  }, [userId, user_id, project, navigate]);
+  }, [userId, user_id, project, navigate, dispatch]);
 
   const onNodesChange = useCallback(
     (changes) => {
@@ -55,11 +55,7 @@ function CenterCanvas({ project, projectId, user_id }) {
       }
       const { dragging } = changes[0];
       if (dragging === false) {
-        axios.put(`projects/${projectId}`, {
-          ...project,
-          nodes,
-          edges,
-        });
+        dragNodes(project, projectId, nodes, edges);
       }
     },
     [dispatch, edges, nodes, project, projectId]
