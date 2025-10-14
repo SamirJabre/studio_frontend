@@ -27,3 +27,13 @@ export const fetchProject = async (projectId, setProject, navigate) => {
     navigate("/404");
   }
 };
+
+export const deleteNode = async (projectId, updatedProject) => {
+  try {
+    const response = await axios.put(`/projects/${projectId}`, updatedProject);
+    console.log(response.data);
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+};

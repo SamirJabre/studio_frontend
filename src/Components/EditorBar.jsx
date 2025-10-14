@@ -2,6 +2,7 @@ import { FaCopy, FaTrash } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { deleteNode } from "../APIS/editorApi.js";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -10,7 +11,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
   const selectedNode = useSelector((state) => state.node);
   console.log(selectedNode);
 
-  // TODO: Connect this to your ReactFlow node selection
+  // TODO: Connect this to your ReactFlow node selectionz
   // Example: Call setNodeSelected(true) when a node is selected
   // You can pass setNodeSelected as a prop or use context/redux
 
@@ -33,8 +34,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
             edge.target !== selectedNode.nodeId
         ),
       };
-
-      await axios.put(`/projects/${projectId}`, updatedProject);
+      deleteNode(projectId, updatedProject);
 
       // Trigger project refresh in parent component
       if (onProjectUpdate) {
