@@ -5,9 +5,10 @@ import { Navigate, Outlet, useLocation } from "react-router";
 // Protects nested routes: renders children when authenticated, otherwise redirects to login.
 const RequireAuth = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const token = localStorage.getItem("token");
   const location = useLocation();
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !token) {
     // Preserve the path the user tried to visit so we can send them back after login
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

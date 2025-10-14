@@ -4,6 +4,7 @@ import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
 import EditorBar from "../Components/EditorBar";
 import axios from "axios";
+import { fetchProject } from "../APIS/editorApi";
 axios.defaults.baseURL = "http://localhost:4000";
 
 function Editor() {
@@ -12,16 +13,7 @@ function Editor() {
   const [project, setProject] = useState([]);
 
   useEffect(() => {
-    const fetchProject = async () => {
-      try {
-        const response = await axios.get(`/projects/${projectId}`);
-        setProject(response.data);
-      } catch {
-        navigate("/404");
-      }
-    };
-
-    fetchProject();
+    fetchProject(projectId, setProject, navigate);
   }, [navigate, projectId]);
 
   const handleProjectUpdate = (updatedProject) => {

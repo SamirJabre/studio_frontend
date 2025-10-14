@@ -5,6 +5,9 @@ export const projectsSlice = createSlice({
   initialState: [],
   reducers: {
     setProjects: (state, action) => {
+      if (state.length === action.payload.length) {
+        return state;
+      }
       state.push(...action.payload);
     },
     addProject: (state, action) => {

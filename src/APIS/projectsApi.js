@@ -29,7 +29,6 @@ export const fetchProjects = async (dispatch) => {
       },
     });
     dispatch(setProjects(response.data));
-    setProjects(response.data);
   } catch (error) {
     console.error("Error fetching projects:", error);
   }

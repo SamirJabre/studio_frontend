@@ -5,11 +5,12 @@ import { Outlet, useLocation, useNavigate } from "react-router";
 // Guest-only guard: lets login/register show their success toast, then redirects.
 const RequireGuest = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !token) return;
 
     // Give login/register success toast time to show (matches toast 1500ms)
     const timer = setTimeout(() => {
@@ -17,7 +18,7 @@ const RequireGuest = () => {
     }, 1600);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, token]);
 
   return <Outlet />;
 };
