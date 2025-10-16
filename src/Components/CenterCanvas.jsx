@@ -12,6 +12,10 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
+import StartNode from "../Base/NodesTypes/StartNode.jsx";
+import FormNode from "../Base/NodesTypes/FormNode.jsx";
+import EmailNode from "../Base/NodesTypes/EmailNode.jsx";
+import EndNode from "../Base/NodesTypes/EndNode.jsx";
 
 function CenterCanvas({ project, projectId, user_id }) {
   const dispatch = useDispatch();
@@ -83,11 +87,20 @@ function CenterCanvas({ project, projectId, user_id }) {
 
     [nodes, project, projectId]
   );
+
+  const nodeTypes = {
+    startNode: StartNode,
+    endNode: EndNode,
+    formNode: FormNode,
+    emailNode: EmailNode,
+  };
+
   return (
     <>
       <div className={`h-full w-full z-30`}>
         <ReactFlow
           nodes={nodes}
+          nodeTypes={nodeTypes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}

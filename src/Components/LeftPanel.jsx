@@ -69,25 +69,25 @@ function LeftPanel() {
               <div className="space-y-2">
                 <NodeItem
                   icon={<FaCube />}
-                  title="Start Node"
+                  title="Start"
                   description="Entry point"
                   color="#10B981"
                 />
                 <NodeItem
                   icon={<FaCube />}
-                  title="Process Node"
-                  description="Process data"
+                  title="Form"
+                  description="Collect user input"
                   color="#5664F5"
                 />
                 <NodeItem
                   icon={<FaCube />}
-                  title="Decision Node"
-                  description="Conditional logic"
+                  title="Email"
+                  description="Send notifications"
                   color="#F59E0B"
                 />
                 <NodeItem
                   icon={<FaCube />}
-                  title="End Node"
+                  title="End"
                   description="Exit point"
                   color="#EF4444"
                 />
@@ -102,21 +102,15 @@ function LeftPanel() {
               <div className="space-y-2">
                 <NodeItem
                   icon={<FaCube />}
-                  title="API Call"
+                  title="API"
                   description="External request"
                   color="#8B5CF6"
                 />
                 <NodeItem
                   icon={<FaCube />}
-                  title="Database"
-                  description="Data storage"
+                  title="Condition"
+                  description="Conditional logic"
                   color="#06B6D4"
-                />
-                <NodeItem
-                  icon={<FaCube />}
-                  title="Transform"
-                  description="Data manipulation"
-                  color="#EC4899"
                 />
               </div>
             </div>

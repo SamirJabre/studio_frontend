@@ -120,24 +120,70 @@
         {
           "id": "1",
           "position": {
-            "x": 0,
-            "y": 0
+            "x": -390.5,
+            "y": -46.5
           },
           "data": {
             "label": "Node 1"
           },
-          "type": "input"
+          "type": "startNode",
+          "measured": {
+            "width": 102,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
         },
         {
           "id": "2",
           "position": {
-            "x": 0,
-            "y": 100
+            "x": -235.5,
+            "y": -4.5
           },
           "data": {
             "label": "Node 2"
           },
-          "type": "default"
+          "type": "formNode",
+          "measured": {
+            "width": 105,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": false
+        },
+        {
+          "id": "3",
+          "position": {
+            "x": -50,
+            "y": -13.5
+          },
+          "data": {
+            "label": "Node 3"
+          },
+          "type": "emailNode",
+          "measured": {
+            "width": 106,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": false
+        },
+        {
+          "id": "4",
+          "position": {
+            "x": 149,
+            "y": -12.9375
+          },
+          "data": {
+            "label": "Node 4"
+          },
+          "type": "endNode",
+          "measured": {
+            "width": 96,
+            "height": 60
+          },
+          "selected": true,
+          "dragging": true
         }
       ],
       "edges": [
@@ -145,6 +191,16 @@
           "id": "1-2",
           "source": "1",
           "target": "2"
+        },
+        {
+          "id": "2-3",
+          "source": "2",
+          "target": "3"
+        },
+        {
+          "id": "3-4",
+          "source": "3",
+          "target": "4"
         }
       ],
       "metadata": {
