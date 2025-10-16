@@ -86,3 +86,15 @@ export const dragNodes = async (project, projectId, nodes, edges) => {
     console.error("Error dragging nodes:", error);
   }
 };
+
+export const connectNodes = async (project, projectId, nodes, newEdge) => {
+  try {
+    await axios.put(`projects/${projectId}`, {
+      ...project,
+      nodes,
+      edges: [...project.edges, newEdge],
+    });
+  } catch (error) {
+    console.error("Error connecting nodes:", error);
+  }
+};

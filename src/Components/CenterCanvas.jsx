@@ -3,7 +3,6 @@ import {
   ReactFlow,
   applyNodeChanges,
   applyEdgeChanges,
-  addEdge,
   Controls,
   MiniMap,
   Background,
@@ -12,7 +11,7 @@ import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
-import { dragNodes } from "../APIS/projectsApi.js";
+import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
 
 function CenterCanvas({ project, projectId, user_id }) {
   const dispatch = useDispatch();
@@ -60,14 +59,29 @@ function CenterCanvas({ project, projectId, user_id }) {
     },
     [dispatch, edges, nodes, project, projectId]
   );
-  const onEdgesChange = useCallback(
-    (changes) =>
-      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    []
-  );
+  const onEdgesChange = useCallback((changes) => {
+    setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot));
+  }, []);
   const onConnect = useCallback(
-    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    []
+    (params) => {
+      console.log(params);
+
+      // Create edge with proper ID format
+      const newEdge = {
+        id: `${params.source}-${params.target}`,
+        source: params.source,
+        target: params.target,
+      };
+
+      // Add the new edge to state
+      setEdges((edgesSnapshot) => [...edgesSnapshot, newEdge]);
+
+      // Update the backend with all edges including the new one
+      // const updatedEdges = [...edges, newEdge];
+      connectNodes(project, projectId, nodes, newEdge);
+    },
+
+    [nodes, project, projectId]
   );
   return (
     <>
