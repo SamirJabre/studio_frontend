@@ -11,11 +11,14 @@ import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
+import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
 import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
 import StartNode from "../Base/NodesTypes/StartNode.jsx";
 import FormNode from "../Base/NodesTypes/FormNode.jsx";
 import EmailNode from "../Base/NodesTypes/EmailNode.jsx";
 import EndNode from "../Base/NodesTypes/EndNode.jsx";
+import ApiNode from "../Base/NodesTypes/ApiNode.jsx";
+import ConditionNode from "../Base/NodesTypes/ConditionNode.jsx";
 
 function CenterCanvas({ project, projectId, user_id }) {
   const dispatch = useDispatch();
@@ -64,8 +67,14 @@ function CenterCanvas({ project, projectId, user_id }) {
     [dispatch, edges, nodes, project, projectId]
   );
   const onEdgesChange = useCallback((changes) => {
+    console.log("Edge changes:", changes);
+    if (changes.some((change) => change.type === "select" && change.selected)) {
+      dispatch(setEdgeId(changes.find((change) => change.selected).id));
+    } else {
+      dispatch(setEdgeId(null));
+    }
     setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot));
-  }, []);
+  }, [dispatch]);
   const onConnect = useCallback(
     (params) => {
       console.log(params);
@@ -93,6 +102,8 @@ function CenterCanvas({ project, projectId, user_id }) {
     endNode: EndNode,
     formNode: FormNode,
     emailNode: EmailNode,
+    apiNode: ApiNode,
+    conditionNode: ConditionNode,
   };
 
   return (

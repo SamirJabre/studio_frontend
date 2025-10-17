@@ -2,12 +2,14 @@ import { FaCopy, FaTrash } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { deleteNode } from "../APIS/editorApi.js";
+import { deleteEdge, deleteNode } from "../APIS/editorApi.js";
 
 function EditorBar({ project, projectId, onProjectUpdate }) {
   const navigate = useNavigate();
   const selectedNode = useSelector((state) => state.node);
+  const selectedEdge = useSelector((state) => state.edge);
   console.log(selectedNode);
+  console.log(selectedEdge);
 
   // TODO: Connect this to your ReactFlow node selectionz
   // Example: Call setNodeSelected(true) when a node is selected
@@ -19,25 +21,43 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
     // Add your duplicate logic here
   };
 
-  const handleDelete = async () => {
+  const handleDeleteSelected = async () => {
     try {
-      if (!selectedNode.nodeId) return;
+      // If an edge is selected, delete the edge
+      if (selectedEdge?.edgeId) {
+        const updatedProject = {
+          ...project,
+          edges: project.edges.filter(
+            (edge) => edge.id !== selectedEdge.edgeId
+          ),
+        };
+        deleteEdge(projectId, updatedProject);
 
-      const updatedProject = {
-        ...project,
-        nodes: project.nodes.filter((node) => node.id !== selectedNode.nodeId),
-        edges: project.edges.filter(
-          (edge) =>
-            edge.source !== selectedNode.nodeId &&
-            edge.target !== selectedNode.nodeId
-        ),
-      };
-      deleteNode(projectId, updatedProject);
-
-      // Trigger project refresh in parent component
-      if (onProjectUpdate) {
-        onProjectUpdate(updatedProject);
+        if (onProjectUpdate) onProjectUpdate(updatedProject);
+        return;
       }
+
+      // If a node is selected, delete the node and its connected edges
+      if (selectedNode?.nodeId) {
+        const updatedProject = {
+          ...project,
+          nodes: project.nodes.filter(
+            (node) => node.id !== selectedNode.nodeId
+          ),
+          edges: project.edges.filter(
+            (edge) =>
+              edge.source !== selectedNode.nodeId &&
+              edge.target !== selectedNode.nodeId
+          ),
+        };
+        deleteNode(projectId, updatedProject);
+
+        if (onProjectUpdate) onProjectUpdate(updatedProject);
+        return;
+      }
+
+      // Nothing selected
+      return;
     } catch (e) {
       console.log(e);
       return;
@@ -75,14 +95,14 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
 
         {/* Delete Button */}
         <button
-          onClick={handleDelete}
-          disabled={!selectedNode.nodeId}
+          onClick={handleDeleteSelected}
+          disabled={!selectedNode?.nodeId && !selectedEdge?.edgeId}
           className={`h-8 w-8 rounded-md transition-all duration-300 flex items-center justify-center border-2 ${
-            selectedNode.nodeId
+            selectedNode?.nodeId || selectedEdge?.edgeId
               ? "border-[#5664F5] text-[#5664F5] hover:bg-[#5664F5] hover:text-white cursor-pointer"
               : "border-gray-300 text-gray-300 cursor-not-allowed"
           }`}
-          title="Delete Node"
+          title="Delete Selected"
         >
           <FaTrash className="text-sm" />
         </button>

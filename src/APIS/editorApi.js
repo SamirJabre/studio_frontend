@@ -37,3 +37,14 @@ export const deleteNode = async (projectId, updatedProject) => {
     return;
   }
 };
+
+
+export const deleteEdge = async (projectId, updatedProject) => {
+  try {
+    const response = await axios.put(`/projects/${projectId}`, updatedProject);
+    console.log(response.data);
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+};
