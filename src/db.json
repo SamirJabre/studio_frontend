@@ -118,7 +118,7 @@
       "color": "#8B5CF6",
       "nodes": [
         {
-          "id": "1",
+          "id": "a3f7",
           "position": {
             "x": -451.7443111189166,
             "y": -201.9663282249421
@@ -131,14 +131,13 @@
             "width": 102,
             "height": 60
           },
-          "selected": false,
-          "dragging": true
+          "selected": false
         },
         {
-          "id": "2",
+          "id": "b8e2",
           "position": {
-            "x": -280.78567195160645,
-            "y": -202.28316975551783
+            "x": -296.89039914957607,
+            "y": -202.39967053821908
           },
           "data": {
             "label": "Node 2"
@@ -148,14 +147,13 @@
             "width": 105,
             "height": 60
           },
-          "selected": false,
-          "dragging": false
+          "selected": false
         },
         {
-          "id": "3",
+          "id": "c5d9",
           "position": {
-            "x": -117.19502801181918,
-            "y": -200.7719422732978
+            "x": -141.48976782214234,
+            "y": -202.26178986513946
           },
           "data": {
             "label": "Node 3"
@@ -165,14 +163,14 @@
             "width": 106,
             "height": 60
           },
-          "selected": false,
-          "dragging": false
+          "selected": true,
+          "dragging": true
         },
         {
-          "id": "4",
+          "id": "d1a6",
           "position": {
-            "x": 192.76127417294333,
-            "y": -201.87862566726463
+            "x": 26.238158644554396,
+            "y": -205.51653551351353
           },
           "data": {
             "label": "Node 4"
@@ -182,14 +180,14 @@
             "width": 96,
             "height": 60
           },
-          "selected": true,
-          "dragging": true
+          "selected": false,
+          "dragging": false
         },
         {
-          "id": "5",
+          "id": "e4b3",
           "position": {
-            "x": 41.44983538865358,
-            "y": -201.62616305587972
+            "x": 142.90844906320046,
+            "y": -199.43268772114465
           },
           "data": {
             "label": "Node 5"
@@ -203,28 +201,7 @@
           "dragging": false
         }
       ],
-      "edges": [
-        {
-          "id": "1-2",
-          "source": "1",
-          "target": "2"
-        },
-        {
-          "id": "2-3",
-          "source": "2",
-          "target": "3"
-        },
-        {
-          "id": "3-5",
-          "source": "3",
-          "target": "5"
-        },
-        {
-          "id": "5-4",
-          "source": "5",
-          "target": "4"
-        }
-      ],
+      "edges": [],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
         "lastModified": "2025-09-28T14:30:00.000Z",

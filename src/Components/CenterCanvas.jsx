@@ -10,7 +10,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { setNodeId } from "../Redux/Slices/nodeSlice.js";
+import { setNodeId, setNodeType } from "../Redux/Slices/nodeSlice.js";
 import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
 import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
 import StartNode from "../Base/NodesTypes/StartNode.jsx";
@@ -46,19 +46,27 @@ function CenterCanvas({ project, projectId, user_id }) {
     (changes) => {
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
       console.log(changes);
-      if (
-        changes.map((change) => change.type === "select") &&
-        changes.map((change) => change.selected).includes(true)
-      ) {
-        dispatch(setNodeId(changes.find((change) => change.selected).id));
-      } else if (
-        changes.map((change) => change.type === "position") &&
-        changes.map((change) => change.dragging).includes(false)
-      ) {
-        dispatch(setNodeId(changes.find((change) => !change.dragging).id));
+
+      const selectChange = changes.find((c) => c.type === "select");
+      const dragStopChange = changes.find(
+        (c) => c.type === "position" && c.dragging === false
+      );
+
+      if (selectChange && selectChange.selected) {
+        const id = selectChange.id;
+        dispatch(setNodeId(id));
+        const node = nodes.find((n) => n.id === id);
+        dispatch(setNodeType(node?.type ?? null));
+      } else if (dragStopChange) {
+        const id = dragStopChange.id;
+        dispatch(setNodeId(id));
+        // Do NOT set node type on drag stop
       } else {
+        // Nothing selected
         dispatch(setNodeId(null));
+        dispatch(setNodeType(null));
       }
+
       const { dragging } = changes[0];
       if (dragging === false) {
         dragNodes(project, projectId, nodes, edges);
@@ -66,15 +74,24 @@ function CenterCanvas({ project, projectId, user_id }) {
     },
     [dispatch, edges, nodes, project, projectId]
   );
-  const onEdgesChange = useCallback((changes) => {
-    console.log("Edge changes:", changes);
-    if (changes.some((change) => change.type === "select" && change.selected)) {
-      dispatch(setEdgeId(changes.find((change) => change.selected).id));
-    } else {
-      dispatch(setEdgeId(null));
-    }
-    setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot));
-  }, [dispatch]);
+  const onEdgesChange = useCallback(
+    (changes) => {
+      console.log("Edge changes:", changes);
+      if (
+        changes.some((change) => change.type === "select" && change.selected)
+      ) {
+        const id = changes.find((change) => change.selected).id;
+        dispatch(setEdgeId(id));
+        // Clear node selection/type when an edge is selected
+        dispatch(setNodeId(null));
+        dispatch(setNodeType(null));
+      } else {
+        dispatch(setEdgeId(null));
+      }
+      setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot));
+    },
+    [dispatch]
+  );
   const onConnect = useCallback(
     (params) => {
       console.log(params);

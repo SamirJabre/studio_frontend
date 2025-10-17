@@ -4,6 +4,7 @@ import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
 import EditorBar from "../Components/EditorBar";
 import { fetchProject } from "../APIS/editorApi";
+import ConfigurationPanel from "../Components/ConfigurationPanel";
 
 function Editor() {
   const projectId = useParams().id;
@@ -31,6 +32,7 @@ function Editor() {
         user_id={project.user_id}
         projectId={projectId}
       />
+      <ConfigurationPanel />
     </div>
   );
 }
