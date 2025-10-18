@@ -1,4 +1,6 @@
 import axios from "axios";
+import { setEdgeId } from "../Redux/Slices/edgeSlice";
+import { setNodeId } from "../Redux/Slices/nodeSlice";
 axios.defaults.baseURL = "http://localhost:4000";
 
 axios.interceptors.request.use(
@@ -27,10 +29,10 @@ export const fetchProject = async (projectId, setProject, navigate) => {
     navigate("/404");
   }
 };
-
-export const deleteNode = async (projectId, updatedProject) => {
+export const deleteNode = async (projectId, updatedProject, dispatch) => {
   try {
     const response = await axios.put(`/projects/${projectId}`, updatedProject);
+    dispatch(setNodeId(null));
     console.log(response.data);
   } catch (e) {
     console.log(e);
@@ -38,10 +40,10 @@ export const deleteNode = async (projectId, updatedProject) => {
   }
 };
 
-
-export const deleteEdge = async (projectId, updatedProject) => {
+export const deleteEdge = async (projectId, updatedProject, dispatch) => {
   try {
     const response = await axios.put(`/projects/${projectId}`, updatedProject);
+    dispatch(setEdgeId(null));
     console.log(response.data);
   } catch (e) {
     console.log(e);

@@ -1,16 +1,20 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setNodeType, setNodeId } from "../Redux/Slices/nodeSlice.js";
+import { setNodeType } from "../Redux/Slices/nodeSlice.js";
 import { useEffect } from "react";
 import {
   FaTimes,
-  FaPlayCircle,
   FaWpforms,
   FaEnvelope,
   FaCloud,
   FaCodeBranch,
-  FaStopCircle,
   FaCog,
 } from "react-icons/fa";
+
+// Import individual node configuration components
+import FormNodeConfig from "./NodeConfigurations/FormNodeConfig.jsx";
+import EmailNodeConfig from "./NodeConfigurations/EmailNodeConfig.jsx";
+import ApiNodeConfig from "./NodeConfigurations/ApiNodeConfig.jsx";
+import ConditionNodeConfig from "./NodeConfigurations/ConditionNodeConfig.jsx";
 
 function ConfigurationPanel() {
   const dispatch = useDispatch();
@@ -27,19 +31,19 @@ function ConfigurationPanel() {
 
   const closePanel = () => {
     dispatch(setNodeType(null));
-    dispatch(setNodeId(null));
+    // dispatch(setNodeId(null));
   };
 
   // Node configuration metadata
   const getNodeConfig = () => {
     switch (selectedNodeType) {
-      case "startNode":
-        return {
-          icon: <FaPlayCircle className="text-2xl" />,
-          title: "Start Node",
-          color: "#10B981",
-          description: "Configure the entry point of your workflow",
-        };
+      // case "startNode":
+      //   return {
+      //     icon: <FaPlayCircle className="text-2xl" />,
+      //     title: "Start Node",
+      //     color: "#10B981",
+      //     description: "Configure the entry point of your workflow",
+      //   };
       case "formNode":
         return {
           icon: <FaWpforms className="text-2xl" />,
@@ -68,13 +72,13 @@ function ConfigurationPanel() {
           color: "#06B6D4",
           description: "Define conditional logic and branching",
         };
-      case "endNode":
-        return {
-          icon: <FaStopCircle className="text-2xl" />,
-          title: "End Node",
-          color: "#EF4444",
-          description: "Configure workflow completion actions",
-        };
+      // case "endNode":
+      //   return {
+      //     icon: <FaStopCircle className="text-2xl" />,
+      //     title: "End Node",
+      //     color: "#EF4444",
+      //     description: "Configure workflow completion actions",
+      //   };
       default:
         return {
           icon: <FaCog className="text-2xl" />,
@@ -87,56 +91,21 @@ function ConfigurationPanel() {
 
   const nodeConfig = getNodeConfig();
 
+  // Render the appropriate configuration component based on node type
   const renderNodeConfiguration = () => {
     switch (selectedNodeType) {
-      case "startNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Start Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
+      // case "startNode":
+      //   return <StartNodeConfig />;
       case "formNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Form Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
+        return <FormNodeConfig />;
       case "emailNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Email Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
+        return <EmailNodeConfig />;
       case "apiNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              API Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
+        return <ApiNodeConfig />;
       case "conditionNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              Condition Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
-      case "endNode":
-        return (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              End Node Configuration - Coming Soon
-            </p>
-          </div>
-        );
+        return <ConditionNodeConfig />;
+      // case "endNode":
+      //   return <EndNodeConfig />;
       default:
         return null;
     }

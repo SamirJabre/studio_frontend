@@ -10,15 +10,10 @@ import {
 import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { setNodeId, setNodeType } from "../Redux/Slices/nodeSlice.js";
+import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
 import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
-import StartNode from "../Base/NodesTypes/StartNode.jsx";
-import FormNode from "../Base/NodesTypes/FormNode.jsx";
-import EmailNode from "../Base/NodesTypes/EmailNode.jsx";
-import EndNode from "../Base/NodesTypes/EndNode.jsx";
-import ApiNode from "../Base/NodesTypes/ApiNode.jsx";
-import ConditionNode from "../Base/NodesTypes/ConditionNode.jsx";
+import Node from "../Base/Node.jsx";
 
 function CenterCanvas({ project, projectId, user_id }) {
   const dispatch = useDispatch();
@@ -44,10 +39,12 @@ function CenterCanvas({ project, projectId, user_id }) {
 
   const onNodesChange = useCallback(
     (changes) => {
-      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
       console.log(changes);
+      setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
 
-      const selectChange = changes.find((c) => c.type === "select");
+      const selectChange = changes.find(
+        (c) => c.type === "select" && c.selected
+      );
       const dragStopChange = changes.find(
         (c) => c.type === "position" && c.dragging === false
       );
@@ -55,8 +52,8 @@ function CenterCanvas({ project, projectId, user_id }) {
       if (selectChange && selectChange.selected) {
         const id = selectChange.id;
         dispatch(setNodeId(id));
-        const node = nodes.find((n) => n.id === id);
-        dispatch(setNodeType(node?.type ?? null));
+        // const node = nodes.find((n) => n.id === id);
+        // dispatch(setNodeType(node?.type ?? null));
       } else if (dragStopChange) {
         const id = dragStopChange.id;
         dispatch(setNodeId(id));
@@ -64,7 +61,7 @@ function CenterCanvas({ project, projectId, user_id }) {
       } else {
         // Nothing selected
         dispatch(setNodeId(null));
-        dispatch(setNodeType(null));
+        // dispatch(setNodeType(null));
       }
 
       const { dragging } = changes[0];
@@ -84,7 +81,7 @@ function CenterCanvas({ project, projectId, user_id }) {
         dispatch(setEdgeId(id));
         // Clear node selection/type when an edge is selected
         dispatch(setNodeId(null));
-        dispatch(setNodeType(null));
+        // dispatch(setNodeType(null));
       } else {
         dispatch(setEdgeId(null));
       }
@@ -108,19 +105,19 @@ function CenterCanvas({ project, projectId, user_id }) {
 
       // Update the backend with all edges including the new one
       // const updatedEdges = [...edges, newEdge];
-      connectNodes(project, projectId, nodes, newEdge);
+      connectNodes(project, projectId, nodes, [...edges, newEdge]);
     },
 
-    [nodes, project, projectId]
+    [edges, nodes, project, projectId]
   );
 
   const nodeTypes = {
-    startNode: StartNode,
-    endNode: EndNode,
-    formNode: FormNode,
-    emailNode: EmailNode,
-    apiNode: ApiNode,
-    conditionNode: ConditionNode,
+    startNode: Node,
+    endNode: Node,
+    formNode: Node,
+    emailNode: Node,
+    apiNode: Node,
+    conditionNode: Node,
   };
 
   return (

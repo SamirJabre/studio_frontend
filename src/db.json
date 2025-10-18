@@ -121,7 +121,7 @@
           "id": "a3f7",
           "position": {
             "x": -451.7443111189166,
-            "y": -201.9663282249421
+            "y": -154.84446477670593
           },
           "data": {
             "label": "Node 1"
@@ -136,8 +136,8 @@
         {
           "id": "b8e2",
           "position": {
-            "x": -296.89039914957607,
-            "y": -202.39967053821908
+            "x": -324.4825243039734,
+            "y": -158.5668340563099
           },
           "data": {
             "label": "Node 2"
@@ -147,13 +147,31 @@
             "width": 105,
             "height": 60
           },
-          "selected": false
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "c5d8",
+          "position": {
+            "x": 67.05579110480402,
+            "y": -175.28557652770806
+          },
+          "data": {
+            "label": "Node 3"
+          },
+          "type": "conditionNode",
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
         },
         {
           "id": "c5d9",
           "position": {
-            "x": -141.48976782214234,
-            "y": -202.26178986513946
+            "x": -190.60402362553538,
+            "y": -157.3697498211117
           },
           "data": {
             "label": "Node 3"
@@ -163,14 +181,14 @@
             "width": 106,
             "height": 60
           },
-          "selected": true,
-          "dragging": true
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "d1a6",
           "position": {
-            "x": 26.238158644554396,
-            "y": -205.51653551351353
+            "x": 232.2691807844188,
+            "y": -159.53409676579514
           },
           "data": {
             "label": "Node 4"
@@ -186,8 +204,8 @@
         {
           "id": "e4b3",
           "position": {
-            "x": 142.90844906320046,
-            "y": -199.43268772114465
+            "x": -54.83824865956777,
+            "y": -156.44969575349472
           },
           "data": {
             "label": "Node 5"
@@ -201,7 +219,33 @@
           "dragging": false
         }
       ],
-      "edges": [],
+      "edges": [
+        {
+          "id": "a3f7-b8e2",
+          "source": "a3f7",
+          "target": "b8e2"
+        },
+        {
+          "id": "b8e2-c5d9",
+          "source": "b8e2",
+          "target": "c5d9"
+        },
+        {
+          "id": "c5d9-e4b3",
+          "source": "c5d9",
+          "target": "e4b3"
+        },
+        {
+          "id": "e4b3-c5d8",
+          "source": "e4b3",
+          "target": "c5d8"
+        },
+        {
+          "id": "c5d8-d1a6",
+          "source": "c5d8",
+          "target": "d1a6"
+        }
+      ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
         "lastModified": "2025-09-28T14:30:00.000Z",

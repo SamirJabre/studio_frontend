@@ -1,11 +1,13 @@
 import { FaCopy, FaTrash } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { deleteEdge, deleteNode } from "../APIS/editorApi.js";
 
 function EditorBar({ project, projectId, onProjectUpdate }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const selectedNode = useSelector((state) => state.node);
   const selectedEdge = useSelector((state) => state.edge);
   console.log(selectedNode);
@@ -31,7 +33,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
             (edge) => edge.id !== selectedEdge.edgeId
           ),
         };
-        deleteEdge(projectId, updatedProject);
+        deleteEdge(projectId, updatedProject, dispatch);
 
         if (onProjectUpdate) onProjectUpdate(updatedProject);
         return;
@@ -50,7 +52,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
               edge.target !== selectedNode.nodeId
           ),
         };
-        deleteNode(projectId, updatedProject);
+        deleteNode(projectId, updatedProject, dispatch);
 
         if (onProjectUpdate) onProjectUpdate(updatedProject);
         return;
