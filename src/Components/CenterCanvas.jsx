@@ -23,7 +23,6 @@ function CenterCanvas({ project, projectId, user_id }) {
   const [edges, setEdges] = useState([]);
 
   useEffect(() => {
-    // Wait until both IDs are available before deciding
     if (userId == null || user_id == null) return;
     project.nodes.length === 0 && dispatch(setNodeId(null));
 
@@ -57,9 +56,7 @@ function CenterCanvas({ project, projectId, user_id }) {
       } else if (dragStopChange) {
         const id = dragStopChange.id;
         dispatch(setNodeId(id));
-        // Do NOT set node type on drag stop
       } else {
-        // Nothing selected
         dispatch(setNodeId(null));
         // dispatch(setNodeType(null));
       }
@@ -79,7 +76,6 @@ function CenterCanvas({ project, projectId, user_id }) {
       ) {
         const id = changes.find((change) => change.selected).id;
         dispatch(setEdgeId(id));
-        // Clear node selection/type when an edge is selected
         dispatch(setNodeId(null));
         // dispatch(setNodeType(null));
       } else {
@@ -92,19 +88,15 @@ function CenterCanvas({ project, projectId, user_id }) {
   const onConnect = useCallback(
     (params) => {
       console.log(params);
-
-      // Create edge with proper ID format
+      
       const newEdge = {
         id: `${params.source}-${params.target}`,
         source: params.source,
         target: params.target,
       };
-
-      // Add the new edge to state
+      
       setEdges((edgesSnapshot) => [...edgesSnapshot, newEdge]);
-
-      // Update the backend with all edges including the new one
-      // const updatedEdges = [...edges, newEdge];
+      
       connectNodes(project, projectId, nodes, [...edges, newEdge]);
     },
 

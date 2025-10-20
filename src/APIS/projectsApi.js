@@ -101,7 +101,6 @@ export const connectNodes = async (project, projectId, nodes, newEdges) => {
 
 export const updateNodeData = async (project, projectId, nodeId, nodeData) => {
   try {
-    // Find and update the specific node
     const updatedNodes = project.nodes.map((node) =>
       node.id === nodeId ? { ...node, data: nodeData } : node
     );

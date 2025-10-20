@@ -76,7 +76,9 @@
             "x": 100,
             "y": 100
           },
-          "data": {}
+          "data": {
+            "label": "Start Node"
+          }
         }
       ],
       "edges": [],
@@ -124,11 +126,11 @@
             "y": -85.12150271722761
           },
           "data": {
-            "label": "Node 1"
+            "label": "Start Node"
           },
           "type": "startNode",
           "measured": {
-            "width": 116,
+            "width": 141,
             "height": 60
           },
           "selected": false,
@@ -148,12 +150,6 @@
                 "label": "Full Name",
                 "type": "text",
                 "required": true
-              },
-              {
-                "id": 1760924165910,
-                "label": "asd",
-                "type": "text",
-                "required": false
               }
             ]
           },
@@ -168,8 +164,8 @@
         {
           "id": "c5d8",
           "position": {
-            "x": 112.07451776855618,
-            "y": -64.2976229104618
+            "x": 119.6457181500399,
+            "y": -112.2485586598588
           },
           "data": {
             "label": "User Verification Check",
@@ -218,11 +214,11 @@
             "y": -192.8798612290239
           },
           "data": {
-            "label": "Node 4"
+            "label": "End Node"
           },
           "type": "endNode",
           "measured": {
-            "width": 119,
+            "width": 135,
             "height": 60
           },
           "selected": false,
@@ -235,7 +231,7 @@
             "y": -242.0876817613322
           },
           "data": {
-            "label": "Samir Custom API",
+            "label": "Something API",
             "apiEndpoint": "/samir",
             "method": "POST",
             "requestHeaders": "smorhtgnasd",
@@ -243,7 +239,7 @@
           },
           "type": "apiNode",
           "measured": {
-            "width": 186,
+            "width": 167,
             "height": 60
           },
           "selected": false,

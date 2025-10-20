@@ -92,7 +92,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with animated gradient */}
         <div className="relative bg-gradient-to-r from-[#5664F5] via-[#4f5ce5] to-[#4451d9] px-6 sm:px-8 py-5 sm:py-6 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10 animate-shimmer"></div>
           <div className="relative flex items-center justify-between">
@@ -118,10 +117,8 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
           </div>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Project Title */}
             <div className="md:col-span-2">
               <label
                 htmlFor="title"
@@ -142,7 +139,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
               />
             </div>
 
-            {/* Project Description */}
             <div className="md:col-span-2">
               <label
                 htmlFor="description"
@@ -163,7 +159,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
               />
             </div>
 
-            {/* Color Accent */}
             <div className="md:col-span-2">
               <label className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-3">
                 <span className="w-1.5 h-1.5 bg-[#5664F5] rounded-full"></span>
@@ -171,7 +166,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
                 Color Accent
               </label>
 
-              {/* Quick Color Presets */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {[
                   { color: "#5664F5", name: "Indigo" },
@@ -204,7 +198,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
                 ))}
               </div>
 
-              {/* Custom Color Section */}
               <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
                 <div className="flex items-center gap-3 mb-3">
                   <div
@@ -238,7 +231,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
                   </button>
                 </div>
 
-                {/* Color Picker */}
                 {showColorPicker && (
                   <div className="animate-fadeIn">
                     <HexColorPicker
@@ -252,7 +244,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t-2 border-gray-100">
             <button
               type="button"
@@ -272,7 +263,6 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
         </form>
       </div>
 
-      {/* Add custom animation styles */}
       <style
         dangerouslySetInnerHTML={{
           __html: `

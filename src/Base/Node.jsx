@@ -11,7 +11,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setNodeType } from "../Redux/Slices/nodeSlice";
 
-// Node configuration mapping
+
 const NODE_CONFIGS = {
   startNode: {
     icon: FaPlayCircle,
@@ -76,7 +76,7 @@ function Node({ selected, type, id, data }) {
         selected ? "border-[#5664F5] shadow-md" : "border-gray-200"
       }`}
     >
-      {/* Node Icon */}
+      
       <div
         className="p-2 rounded-lg text-white transition-transform group-hover:scale-110 duration-200"
         style={{ backgroundColor: config.color }}
@@ -84,14 +84,14 @@ function Node({ selected, type, id, data }) {
         <Icon />
       </div>
 
-      {/* Node Label */}
+
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-semibold text-gray-800 group-hover:text-[#5664F5] transition-colors">
           {data.label}
         </h4>
       </div>
 
-      {/* Configure Button */}
+
       {selected && type !== "startNode" && type !== "endNode" && (
         <button
           className={`absolute -top-2 -right-2 w-6 h-6 rounded-full text-white shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-xl ${
@@ -111,15 +111,15 @@ function Node({ selected, type, id, data }) {
         </button>
       )}
 
-      {/* Connection Handles */}
+
       {config.handles.target && (
-        <Handle type="target" position={Position.Left} />
+        <Handle type="target" position={Position.Left} nonce="white" />
       )}
       {config.handles.source && (
         <Handle type="source" position={Position.Right} />
       )}
 
-      {/* Animations - Using global style tag */}
+
       <style>
         {`
         @keyframes spin-slow {

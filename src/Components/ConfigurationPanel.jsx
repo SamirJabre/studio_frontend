@@ -37,7 +37,7 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
     // dispatch(setNodeId(null));
   };
 
-  // Get current node data
+  
   const getCurrentNode = () => {
     if (!project || !project.nodes || !selectedNodeId) return null;
     return project.nodes.find((node) => node.id === selectedNodeId);
@@ -136,7 +136,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
 
   const nodeConfig = getNodeConfig();
 
-  // Render the appropriate configuration component based on node type
   const renderNodeConfiguration = () => {
     if (!currentNode) return null;
 
@@ -160,7 +159,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
 
   return (
     <>
-      {/* Backdrop Overlay */}
       {isOpen && (
         <div
           onClick={closePanel}
@@ -168,26 +166,22 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
         />
       )}
 
-      {/* Configuration Panel */}
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Panel Header */}
         <div
           className="relative px-6 py-5 overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${nodeConfig.color} 0%, ${nodeConfig.color}dd 100%)`,
           }}
         >
-          {/* Decorative Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
           </div>
 
-          {/* Header Content */}
           <div className="relative">
             <div className="flex items-start justify-between mb-3">
               <div
@@ -216,10 +210,8 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
           </div>
         </div>
 
-        {/* Panel Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50">
           <div className="space-y-6">
-            {/* Node Info Card */}
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
               <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-2">
                 <span
@@ -244,7 +236,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
               </div>
             </div>
 
-            {/* Configuration Section */}
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
               <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
                 <FaCog className="text-gray-500" />
@@ -255,7 +246,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
           </div>
         </div>
 
-        {/* Panel Footer */}
         <div className="border-t border-gray-200 p-4 bg-white">
           <div className="flex gap-3">
             <button
@@ -278,7 +268,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
         </div>
       </div>
 
-      {/* Custom Animations */}
       <style
         dangerouslySetInnerHTML={{
           __html: `

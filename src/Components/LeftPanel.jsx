@@ -13,7 +13,6 @@ function LeftPanel() {
 
   return (
     <>
-      {/* Toggle Button - Always Visible */}
       <button
         onClick={handleToggle}
         className={`fixed top-5 z-50 bg-white shadow-lg rounded-r-lg p-3 hover:bg-[#5664F5] hover:text-white transition-all duration-500 group ${
@@ -28,7 +27,6 @@ function LeftPanel() {
         )}
       </button>
 
-      {/* Overlay - Visible when panel is open on smaller screens */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 lg:hidden transition-opacity duration-300"
@@ -36,13 +34,11 @@ function LeftPanel() {
         />
       )}
 
-      {/* Side Panel */}
       <div
         className={`fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-40 flex flex-col transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Panel Header */}
         <div className="border-b border-gray-200 p-6 bg-gradient-to-r from-[#5664F5] to-[#4451d9]">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
@@ -57,11 +53,8 @@ function LeftPanel() {
           </div>
         </div>
 
-        {/* Panel Content */}
         <div className="flex-1 overflow-y-auto p-4">
-          {/* Node Categories */}
           <div className="space-y-4">
-            {/* Basic Nodes Section */}
             <div className="space-y-2">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2">
                 Basic Nodes
@@ -94,7 +87,6 @@ function LeftPanel() {
               </div>
             </div>
 
-            {/* Advanced Nodes Section */}
             <div className="space-y-2 pt-2">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2">
                 Advanced Nodes
@@ -117,7 +109,6 @@ function LeftPanel() {
           </div>
         </div>
 
-        {/* Panel Footer */}
         <div className="border-t border-gray-200 p-4 bg-gray-50">
           <p className="text-xs text-gray-500 text-center">
             Drag nodes onto the canvas to start building

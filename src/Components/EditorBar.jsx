@@ -13,19 +13,14 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
   console.log(selectedNode);
   console.log(selectedEdge);
 
-  // TODO: Connect this to your ReactFlow node selectionz
-  // Example: Call setNodeSelected(true) when a node is selected
-  // You can pass setNodeSelected as a prop or use context/redux
 
   const handleDuplicate = () => {
     if (!selectedNode.nodeId) return;
     console.log("Duplicate clicked");
-    // Add your duplicate logic here
   };
 
   const handleDeleteSelected = async () => {
     try {
-      // If an edge is selected, delete the edge
       if (selectedEdge?.edgeId) {
         const updatedProject = {
           ...project,
@@ -39,7 +34,6 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
         return;
       }
 
-      // If a node is selected, delete the node and its connected edges
       if (selectedNode?.nodeId) {
         const updatedProject = {
           ...project,
@@ -58,7 +52,6 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
         return;
       }
 
-      // Nothing selected
       return;
     } catch (e) {
       console.log(e);
@@ -69,7 +62,6 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
   return (
     <nav className="fixed top-3 left-1/2 -translate-x-1/2 w-auto h-12 bg-white rounded-lg z-40 shadow-lg border border-gray-200">
       <div className="w-full h-full flex items-center gap-2 px-3">
-        {/* Back Button */}
         <button
           onClick={() => navigate("/dashboard")}
           className="h-8 px-3 bg-[#5664F5] text-white rounded-md hover:bg-[#4451d9] transition-all duration-300 flex items-center gap-2 font-medium text-sm"
@@ -78,10 +70,8 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
           <span>Back to Dashboard</span>
         </button>
 
-        {/* Divider */}
         <div className="h-6 w-px bg-gray-300"></div>
 
-        {/* Duplicate Button */}
         <button
           onClick={handleDuplicate}
           disabled={!selectedNode.nodeId}
@@ -95,7 +85,6 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
           <FaCopy className="text-sm" />
         </button>
 
-        {/* Delete Button */}
         <button
           onClick={handleDeleteSelected}
           disabled={!selectedNode?.nodeId && !selectedEdge?.edgeId}
