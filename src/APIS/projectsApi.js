@@ -116,3 +116,41 @@ export const updateNodeData = async (project, projectId, nodeId, nodeData) => {
     return { success: false, error };
   }
 };
+
+export const createNode = async (
+  project,
+  projectId,
+  nodeType,
+  position,
+  currentNodes
+) => {
+  try {
+    const label = nodeType
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase())
+      .trim();
+    const newNodeId = `node-${Date.now()}`;
+    const newNode = {
+      id: newNodeId,
+      type: nodeType,
+      position: position,
+      data: { label },
+    };
+
+    const updatedNodes = [...currentNodes, newNode];
+
+    await axios.put(`projects/${projectId}`, {
+      ...project,
+      nodes: updatedNodes,
+      metadata: {
+        ...project.metadata,
+        lastModified: new Date().toISOString(),
+      },
+    });
+
+    return { success: true, newNode, updatedNodes };
+  } catch (error) {
+    console.error("Error creating node:", error);
+    return { success: false, error };
+  }
+};

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   ReactFlow,
   applyNodeChanges,
@@ -6,13 +6,14 @@ import {
   Controls,
   MiniMap,
   Background,
+  useReactFlow,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
-import { dragNodes, connectNodes } from "../APIS/projectsApi.js";
+import { dragNodes, connectNodes, createNode } from "../APIS/projectsApi.js";
 import Node from "../Base/Node.jsx";
 
 function CenterCanvas({ project, projectId, user_id }) {
@@ -21,6 +22,8 @@ function CenterCanvas({ project, projectId, user_id }) {
   const userId = useSelector((state) => state?.auth?.user?.id);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  const reactFlowWrapper = useRef(null);
+  const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
     if (userId == null || user_id == null) return;
@@ -88,19 +91,66 @@ function CenterCanvas({ project, projectId, user_id }) {
   const onConnect = useCallback(
     (params) => {
       console.log(params);
-      
+
       const newEdge = {
         id: `${params.source}-${params.target}`,
         source: params.source,
         target: params.target,
       };
-      
+
       setEdges((edgesSnapshot) => [...edgesSnapshot, newEdge]);
-      
+
       connectNodes(project, projectId, nodes, [...edges, newEdge]);
     },
 
     [edges, nodes, project, projectId]
+  );
+
+  const onDragOver = useCallback((event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const onDrop = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      const nodeType = event.dataTransfer.getData("application/reactflow");
+      if (!nodeType) return;
+
+      const position = screenToFlowPosition({
+        x: event.clientX,
+        y: event.clientY,
+      });
+
+      // Capture current nodes and create new node
+      setNodes((currentNodes) => {
+        // Call API with current state
+        createNode(project, projectId, nodeType, position, currentNodes).then(
+          (result) => {
+            if (!result.success) {
+              console.error("Failed to save node to database");
+            }
+          }
+        );
+
+        // Generate the new node locally to match what the API will create
+        const newNodeId = `node-${Date.now()}`;
+        const label = nodeType
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (str) => str.toUpperCase())
+          .trim();
+        const newNode = {
+          id: newNodeId,
+          type: nodeType,
+          position: position,
+          data: { label },
+        };
+
+        return [...currentNodes, newNode];
+      });
+    },
+    [project, projectId, screenToFlowPosition]
   );
 
   const nodeTypes = {
@@ -114,7 +164,7 @@ function CenterCanvas({ project, projectId, user_id }) {
 
   return (
     <>
-      <div className={`h-full w-full z-30`}>
+      <div className={`h-full w-full z-30`} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           nodeTypes={nodeTypes}
@@ -122,6 +172,8 @@ function CenterCanvas({ project, projectId, user_id }) {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
           fitView
         >
           <Controls />

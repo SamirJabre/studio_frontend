@@ -1,7 +1,14 @@
 function NodeItem({ icon, title, description, color }) {
+  const onDragStart = (event) => {
+    const nodeType = `${title.toLowerCase()}Node`;
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
+  };
+
   return (
     <div
       draggable
+      onDragStart={onDragStart}
       className="flex items-center gap-3 p-3 bg-white border-2 border-gray-200 rounded-lg cursor-grab active:cursor-grabbing hover:border-[#5664F5] hover:shadow-md transition-all duration-200 group"
     >
       <div

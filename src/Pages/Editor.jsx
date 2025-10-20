@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { ReactFlowProvider } from "@xyflow/react";
 import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
 import EditorBar from "../Components/EditorBar";
@@ -27,11 +28,13 @@ function Editor() {
         onProjectUpdate={handleProjectUpdate}
       />
       <LeftPanel />
-      <CenterCanvas
-        project={project}
-        user_id={project.user_id}
-        projectId={projectId}
-      />
+      <ReactFlowProvider>
+        <CenterCanvas
+          project={project}
+          user_id={project.user_id}
+          projectId={projectId}
+        />
+      </ReactFlowProvider>
       <ConfigurationPanel
         project={project}
         projectId={projectId}
