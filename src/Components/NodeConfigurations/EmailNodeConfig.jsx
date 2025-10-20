@@ -1,12 +1,34 @@
+import { useState } from "react";
+
 function EmailNodeConfig() {
+  const [emailTitle, setEmailTitle] = useState("");
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [subjectLine, setSubjectLine] = useState("");
+  const [emailBody, setEmailBody] = useState("");
+
   return (
     <div className="space-y-4">
+      <div className="space-y-3">
+        <label className="block text-sm font-semibold text-gray-700">
+          Email Title
+        </label>
+        <input
+          type="text"
+          value={emailTitle}
+          onChange={(e) => setEmailTitle(e.target.value)}
+          placeholder="Enter Email Title"
+          className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all"
+        />
+      </div>
       <div className="space-y-3">
         <label className="block text-sm font-semibold text-gray-700">
           Recipient Email
         </label>
         <input
+          required
           type="email"
+          value={recipientEmail}
+          onChange={(e) => setRecipientEmail(e.target.value)}
           placeholder="recipient@example.com"
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all"
         />
@@ -17,7 +39,10 @@ function EmailNodeConfig() {
           Subject Line
         </label>
         <input
+          required
           type="text"
+          value={subjectLine}
+          onChange={(e) => setSubjectLine(e.target.value)}
           placeholder="Email subject"
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all"
         />
@@ -25,20 +50,16 @@ function EmailNodeConfig() {
 
       <div className="space-y-3">
         <label className="block text-sm font-semibold text-gray-700">
-          Email Template
+          Email Body
         </label>
         <textarea
+          required
+          value={emailBody}
+          onChange={(e) => setEmailBody(e.target.value)}
           rows={4}
           placeholder="Enter your email content here..."
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#F59E0B] focus:border-[#F59E0B] outline-none transition-all resize-none"
         />
-      </div>
-
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-        <p className="text-xs text-amber-700">
-          <strong>Note:</strong> You can use dynamic variables like {"{"}name
-          {"}"}, {"{"}email{"}"} in your template.
-        </p>
       </div>
     </div>
   );
