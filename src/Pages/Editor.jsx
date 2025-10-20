@@ -32,7 +32,11 @@ function Editor() {
         user_id={project.user_id}
         projectId={projectId}
       />
-      <ConfigurationPanel />
+      <ConfigurationPanel
+        project={project}
+        projectId={projectId}
+        onProjectUpdate={handleProjectUpdate}
+      />
     </div>
   );
 }

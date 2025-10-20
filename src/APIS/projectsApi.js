@@ -98,3 +98,22 @@ export const connectNodes = async (project, projectId, nodes, newEdges) => {
     console.error("Error connecting nodes:", error);
   }
 };
+
+export const updateNodeData = async (project, projectId, nodeId, nodeData) => {
+  try {
+    // Find and update the specific node
+    const updatedNodes = project.nodes.map((node) =>
+      node.id === nodeId ? { ...node, data: nodeData } : node
+    );
+
+    await axios.put(`projects/${projectId}`, {
+      ...project,
+      nodes: updatedNodes,
+    });
+
+    return { success: true, updatedNodes };
+  } catch (error) {
+    console.error("Error updating node data:", error);
+    return { success: false, error };
+  }
+};

@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 
-function FormNodeConfig() {
-  const [formTitle, setFormTitle] = useState("Form");
+const FormNodeConfig = forwardRef(({ data }, ref) => {
+  const [label, setLabel] = useState("Form");
   const [fields, setFields] = useState([
     { id: 1, label: "", type: "text", required: false },
   ]);
+
+  // Initialize state from data prop
+  useEffect(() => {
+    if (data) {
+      if (data.label) setLabel(data.label);
+      if (data.fields && data.fields.length > 0) setFields(data.fields);
+    }
+  }, [data]);
+
+  // Expose getData method via ref
+  useImperativeHandle(ref, () => ({
+    getData: () => ({
+      label,
+      fields,
+    }),
+  }));
 
   const addField = () => {
     const newField = {
@@ -55,8 +71,8 @@ function FormNodeConfig() {
           required
           type="text"
           placeholder="Enter Form Title"
-          value={formTitle}
-          onChange={(e) => setFormTitle(e.target.value)}
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#5664F5] focus:border-[#5664F5] outline-none transition-all"
         />
       </div>
@@ -180,6 +196,6 @@ function FormNodeConfig() {
       </button>
     </div>
   );
-}
+});
 
 export default FormNodeConfig;

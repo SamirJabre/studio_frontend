@@ -120,65 +120,92 @@
         {
           "id": "a3f7",
           "position": {
-            "x": -451.7443111189166,
-            "y": -154.84446477670593
+            "x": -576.7909278560244,
+            "y": -85.12150271722761
           },
           "data": {
             "label": "Node 1"
           },
           "type": "startNode",
           "measured": {
-            "width": 102,
+            "width": 116,
             "height": 60
           },
-          "selected": false
+          "selected": false,
+          "dragging": false
         },
         {
           "id": "b8e2",
           "position": {
-            "x": -324.4825243039734,
-            "y": -158.5668340563099
+            "x": -407.08907717879015,
+            "y": -215.4062053004498
           },
           "data": {
-            "label": "Node 2"
+            "label": "Some Title",
+            "fields": [
+              {
+                "id": 1,
+                "label": "Full Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": 1760924165910,
+                "label": "asd",
+                "type": "text",
+                "required": false
+              }
+            ]
           },
           "type": "formNode",
           "measured": {
-            "width": 105,
+            "width": 139,
             "height": 60
           },
           "selected": false,
-          "dragging": true
+          "dragging": false
         },
         {
           "id": "c5d8",
           "position": {
-            "x": 67.05579110480402,
-            "y": -175.28557652770806
+            "x": 112.07451776855618,
+            "y": -64.2976229104618
           },
           "data": {
-            "label": "Node 3"
+            "label": "User Verification Check",
+            "logic": "OR",
+            "conditions": [
+              {
+                "id": 1,
+                "field": "user.age",
+                "operator": "greater_than",
+                "value": "18"
+              }
+            ]
           },
           "type": "conditionNode",
           "measured": {
-            "width": 135,
+            "width": 218,
             "height": 60
           },
-          "selected": false,
+          "selected": true,
           "dragging": true
         },
         {
           "id": "c5d9",
           "position": {
-            "x": -190.60402362553538,
-            "y": -157.3697498211117
+            "x": -260.3269856850137,
+            "y": -80.82606321233659
           },
           "data": {
-            "label": "Node 3"
+            "label": "Welcome Email",
+            "recipientEmail": "user@example.com",
+            "subjectLine": "Welcome to our platform!",
+            "emailBody": "Thank you for signing up..."
           },
           "type": "emailNode",
           "measured": {
-            "width": 106,
+            "width": 169,
             "height": 60
           },
           "selected": false,
@@ -187,32 +214,36 @@
         {
           "id": "d1a6",
           "position": {
-            "x": 232.2691807844188,
-            "y": -159.53409676579514
+            "x": 405.8187276498594,
+            "y": -192.8798612290239
           },
           "data": {
             "label": "Node 4"
           },
           "type": "endNode",
           "measured": {
-            "width": 96,
+            "width": 119,
             "height": 60
           },
           "selected": false,
-          "dragging": false
+          "dragging": true
         },
         {
           "id": "e4b3",
           "position": {
-            "x": -54.83824865956777,
-            "y": -156.44969575349472
+            "x": -77.57399715722374,
+            "y": -242.0876817613322
           },
           "data": {
-            "label": "Node 5"
+            "label": "Samir Custom API",
+            "apiEndpoint": "/samir",
+            "method": "POST",
+            "requestHeaders": "smorhtgnasd",
+            "requestBody": "BODY"
           },
           "type": "apiNode",
           "measured": {
-            "width": 94,
+            "width": 186,
             "height": 60
           },
           "selected": false,

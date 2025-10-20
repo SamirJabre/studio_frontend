@@ -63,7 +63,7 @@ const NODE_CONFIGS = {
   },
 };
 
-function Node({ selected, type, id }) {
+function Node({ selected, type, id, data }) {
   const dispatch = useDispatch();
 
   const config = NODE_CONFIGS[type];
@@ -87,7 +87,7 @@ function Node({ selected, type, id }) {
       {/* Node Label */}
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-semibold text-gray-800 group-hover:text-[#5664F5] transition-colors">
-          {config.label}
+          {data.label}
         </h4>
       </div>
 

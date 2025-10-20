@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setNodeType } from "../Redux/Slices/nodeSlice.js";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaTimes,
   FaWpforms,
@@ -9,6 +9,7 @@ import {
   FaCodeBranch,
   FaCog,
 } from "react-icons/fa";
+import { updateNodeData } from "../APIS/projectsApi.js";
 
 // Import individual node configuration components
 import FormNodeConfig from "./NodeConfigurations/FormNodeConfig.jsx";
@@ -16,11 +17,13 @@ import EmailNodeConfig from "./NodeConfigurations/EmailNodeConfig.jsx";
 import ApiNodeConfig from "./NodeConfigurations/ApiNodeConfig.jsx";
 import ConditionNodeConfig from "./NodeConfigurations/ConditionNodeConfig.jsx";
 
-function ConfigurationPanel() {
+function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
   const dispatch = useDispatch();
   const selectedNodeType = useSelector((state) => state.node.nodeType);
   const selectedNodeId = useSelector((state) => state.node.nodeId);
   const isOpen = Boolean(selectedNodeType);
+  const configRef = useRef(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (selectedNodeType) {
@@ -32,6 +35,48 @@ function ConfigurationPanel() {
   const closePanel = () => {
     dispatch(setNodeType(null));
     // dispatch(setNodeId(null));
+  };
+
+  // Get current node data
+  const getCurrentNode = () => {
+    if (!project || !project.nodes || !selectedNodeId) return null;
+    return project.nodes.find((node) => node.id === selectedNodeId);
+  };
+
+  const currentNode = getCurrentNode();
+
+  // Handle save configuration
+  const handleSave = async () => {
+    if (!configRef.current || !currentNode) return;
+
+    setIsSaving(true);
+    try {
+      // Get data from the config component
+      const configData = configRef.current.getData();
+
+      // Update node data via API
+      const result = await updateNodeData(project, projectId, selectedNodeId, {
+        ...currentNode.data,
+        ...configData,
+      });
+
+      if (result.success) {
+        // Update local project state
+        const updatedProject = {
+          ...project,
+          nodes: result.updatedNodes,
+        };
+        onProjectUpdate(updatedProject);
+
+        // Show success feedback
+        console.log("Configuration saved successfully!");
+        closePanel();
+      }
+    } catch (error) {
+      console.error("Error saving configuration:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Node configuration metadata
@@ -93,17 +138,19 @@ function ConfigurationPanel() {
 
   // Render the appropriate configuration component based on node type
   const renderNodeConfiguration = () => {
+    if (!currentNode) return null;
+
     switch (selectedNodeType) {
       // case "startNode":
       //   return <StartNodeConfig />;
       case "formNode":
-        return <FormNodeConfig />;
+        return <FormNodeConfig ref={configRef} data={currentNode.data} />;
       case "emailNode":
-        return <EmailNodeConfig />;
+        return <EmailNodeConfig ref={configRef} data={currentNode.data} />;
       case "apiNode":
-        return <ApiNodeConfig />;
+        return <ApiNodeConfig ref={configRef} data={currentNode.data} />;
       case "conditionNode":
-        return <ConditionNodeConfig />;
+        return <ConditionNodeConfig ref={configRef} data={currentNode.data} />;
       // case "endNode":
       //   return <EndNodeConfig />;
       default:
@@ -218,12 +265,14 @@ function ConfigurationPanel() {
               Cancel
             </button>
             <button
-              className="flex-1 px-4 py-2.5 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+              onClick={handleSave}
+              disabled={isSaving}
+              className="flex-1 px-4 py-2.5 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
                 background: `linear-gradient(135deg, ${nodeConfig.color} 0%, ${nodeConfig.color}dd 100%)`,
               }}
             >
-              Save Changes
+              {isSaving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>

@@ -1,12 +1,31 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 
-function ConditionNodeConfig() {
-  const [conditionName, setConditionName] = useState("Condition");
+const ConditionNodeConfig = forwardRef(({ data }, ref) => {
+  const [label, setLabel] = useState("Condition");
   const [logic, setLogic] = useState("AND");
   const [conditions, setConditions] = useState([
     { id: 1, field: "", operator: "equals", value: "" },
   ]);
+
+  // Initialize state from data prop
+  useEffect(() => {
+    if (data) {
+      if (data.label) setLabel(data.label);
+      if (data.logic) setLogic(data.logic);
+      if (data.conditions && data.conditions.length > 0)
+        setConditions(data.conditions);
+    }
+  }, [data]);
+
+  // Expose getData method via ref
+  useImperativeHandle(ref, () => ({
+    getData: () => ({
+      label,
+      logic,
+      conditions,
+    }),
+  }));
 
   const addCondition = () => {
     const newCondition = {
@@ -37,9 +56,9 @@ function ConditionNodeConfig() {
           Condition Name
         </label>
         <input
+          value={label}
           type="text"
-          value={conditionName}
-          onChange={(e) => setConditionName(e.target.value)}
+          onChange={(e) => setLabel(e.target.value)}
           placeholder="e.g., Check if user is verified"
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#06B6D4] focus:border-[#06B6D4] outline-none transition-all"
         />
@@ -200,6 +219,6 @@ function ConditionNodeConfig() {
       </button>
     </div>
   );
-}
+});
 
 export default ConditionNodeConfig;
