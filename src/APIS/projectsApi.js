@@ -130,11 +130,50 @@ export const createNode = async (
       .replace(/^./, (str) => str.toUpperCase())
       .trim();
     const newNodeId = `node-${Date.now()}`;
+
+    // Initialize node data based on type
+    let nodeData = { label };
+
+    switch (nodeType) {
+      case "emailNode":
+        nodeData = {
+          label,
+          recipientEmail: "",
+          subjectLine: "",
+          emailBody: "",
+        };
+        break;
+      case "formNode":
+        nodeData = {
+          label,
+          fields: [],
+        };
+        break;
+      case "apiNode":
+        nodeData = {
+          label,
+          apiEndpoint: "",
+          method: "",
+          requestHeaders: "",
+          requestBody: "",
+        };
+        break;
+      case "conditionNode":
+        nodeData = {
+          label,
+          logic: "OR",
+          conditions: [],
+        };
+        break;
+      default:
+        nodeData = { label };
+    }
+
     const newNode = {
       id: newNodeId,
       type: nodeType,
       position: position,
-      data: { label },
+      data: nodeData,
     };
 
     const updatedNodes = [...currentNodes, newNode];
