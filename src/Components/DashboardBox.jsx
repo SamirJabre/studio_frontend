@@ -1,24 +1,20 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
 import SearchInput from "../Base/SearchInput.jsx";
-import ProjectConfiguration from "./ProjectConfiguration.jsx";
+// import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import Filter from "../Base/Filter.jsx";
 import { FaFolder, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchProjectsRequest } from "../Redux/Slices/projectsSlice.js";
-import {
-  createProject,
-  deleteProject,
-  duplicateProject,
-} from "../APIS/projectsApi.js";
+import { fetchProjects, createProject } from "../Redux/Slices/projectsSlice.js";
+import { deleteProject, duplicateProject } from "../APIS/projectsApi.js";
 
 function DashboardBox() {
   const dispatch = useDispatch();
   const { projects, loading, error } = useSelector((state) => state.projects);
 
   const [search, setSearch] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   // const user_id = useSelector((state) => state?.auth?.user?.id);
 
   const handleSearch = (query) => {
@@ -26,16 +22,16 @@ function DashboardBox() {
   };
 
   useEffect(() => {
-    dispatch(fetchProjectsRequest());
+    dispatch(fetchProjects());
   }, [dispatch]);
 
   const handleRetry = () => {
-    dispatch(fetchProjectsRequest());
+    dispatch(fetchProjects());
   };
 
-  async function handleCreateProject(projectData) {
-    createProject(projectData, dispatch);
-  }
+  const handleCreateProject = async () => {
+    await dispatch(createProject()).unwrap();
+  };
 
   const handleDeleteProject = async (projectId) => {
     deleteProject(projectId, dispatch);
@@ -116,7 +112,7 @@ function DashboardBox() {
               </div>
               <button
                 className="bg-[#5664F5] text-white flex items-center justify-center gap-1 px-4 py-2.5 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all hover:bg-[#4451d9] duration-200 whitespace-nowrap"
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleCreateProject}
               >
                 <AddIcon fontSize="small" />
                 <span className="font-semibold">Create Project</span>
@@ -171,11 +167,11 @@ function DashboardBox() {
       )}
 
       {/* Project Configuration Modal */}
-      <ProjectConfiguration
+      {/* <ProjectConfiguration
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleCreateProject}
-      />
+      /> */}
     </div>
   );
 }

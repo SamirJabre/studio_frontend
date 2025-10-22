@@ -3,9 +3,10 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
+const token = localStorage.getItem("token");
+
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -16,12 +17,10 @@ axios.interceptors.request.use(
   }
 );
 
-export const fetchProjectsRequest = createAsyncThunk(
-  "projects/fetchProjectsRequest",
+export const fetchProjects = createAsyncThunk(
+  "projects/fetchProjects",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("token");
-
       const response = await axios.get("/projects", {
         params: {
           user_id: jwtDecode(token).id,
@@ -30,6 +29,34 @@ export const fetchProjectsRequest = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.log(error);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const createProject = createAsyncThunk(
+  "projects/createProject",
+  async (_, { rejectWithValue }) => {
+    try {
+      const user_id = jwtDecode(token).id;
+      const newProject = {
+        title: "Untitled Project",
+        description: "",
+        color: "#5664F5",
+        nodes: [],
+        edges: [],
+        metadata: {
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          version: 1,
+        },
+        user_id,
+      };
+      const response = await axios.post("/projects", newProject);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating project:", error);
       return rejectWithValue(error.message);
     }
   }
@@ -57,17 +84,24 @@ export const projectsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProjectsRequest.pending, (state) => {
+      .addCase(fetchProjects.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProjectsRequest.fulfilled, (state, action) => {
+      .addCase(fetchProjects.fulfilled, (state, action) => {
         state.loading = false;
         state.projects = action.payload;
         state.error = null;
       })
-      .addCase(fetchProjectsRequest.rejected, (state, action) => {
+      .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload);
+      })
+      .addCase(createProject.rejected, (state, action) => {
         state.error = action.payload;
       });
   },
