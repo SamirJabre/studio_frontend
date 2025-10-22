@@ -108,14 +108,6 @@ export const projectsSlice = createSlice({
     duplicatedProjectError: null,
   },
   reducers: {
-    addProject: (state, action) => {
-      state.projects.push(action.payload);
-    },
-    removeProject: (state, action) => {
-      state.projects = state.projects.filter(
-        (project) => project.id !== action.payload
-      );
-    },
     emptyProjects: (state) => {
       state.projects = [];
     },
@@ -164,7 +156,6 @@ export const projectsSlice = createSlice({
   },
 });
 
-export const { addProject, emptyProjects, removeProject } =
-  projectsSlice.actions;
+export const { emptyProjects } = projectsSlice.actions;
 
 export default projectsSlice.reducer;
