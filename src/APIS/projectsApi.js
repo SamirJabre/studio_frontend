@@ -1,10 +1,6 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import {
-  setProjects,
-  addProject,
-  removeProject,
-} from "../Redux/Slices/projectsSlice.js";
+import { addProject, removeProject } from "../Redux/Slices/projectsSlice.js";
 axios.defaults.baseURL = "http://localhost:4000";
 
 axios.interceptors.request.use(
@@ -19,20 +15,6 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-export const fetchProjects = async (dispatch) => {
-  try {
-    const token = localStorage.getItem("token");
-    const response = await axios.get("/projects", {
-      params: {
-        user_id: jwtDecode(token).id,
-      },
-    });
-    dispatch(setProjects(response.data));
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-  }
-};
 
 export const createProject = async (projectData, dispatch) => {
   try {
