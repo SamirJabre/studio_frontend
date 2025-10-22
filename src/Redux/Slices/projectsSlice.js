@@ -61,6 +61,19 @@ export const createProject = createAsyncThunk(
   }
 );
 
+export const deleteProject = createAsyncThunk(
+  "projects/deleteProject",
+  async ({ projectId }, { rejectWithValue }) => {
+    try {
+      await axios.delete(`/projects/${projectId}`);
+      return projectId;
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      return rejectWithValue("Error deleting project");
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projects",
   initialState: {
@@ -68,6 +81,7 @@ export const projectsSlice = createSlice({
     loading: false,
     error: null,
     createdProjectError: null,
+    deletedProjectError: null,
   },
   reducers: {
     addProject: (state, action) => {
@@ -97,12 +111,23 @@ export const projectsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
+
     builder
       .addCase(createProject.fulfilled, (state, action) => {
         state.projects.push(action.payload);
       })
       .addCase(createProject.rejected, (state, action) => {
         state.createdProjectError = action.payload;
+      });
+
+    builder
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.projects = state.projects.filter(
+          (project) => project.id !== action.payload
+        );
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.deletedProjectError = action.payload;
       });
   },
 });

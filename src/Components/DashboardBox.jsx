@@ -7,8 +7,12 @@ import Filter from "../Base/Filter.jsx";
 import { FaFolder, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
-import { fetchProjects, createProject } from "../Redux/Slices/projectsSlice.js";
-import { deleteProject, duplicateProject } from "../APIS/projectsApi.js";
+import {
+  fetchProjects,
+  createProject,
+  deleteProject,
+} from "../Redux/Slices/projectsSlice.js";
+import { duplicateProject } from "../APIS/projectsApi.js";
 
 function DashboardBox() {
   const dispatch = useDispatch();
@@ -37,7 +41,7 @@ function DashboardBox() {
   };
 
   const handleDeleteProject = async (projectId) => {
-    deleteProject(projectId, dispatch);
+    await dispatch(deleteProject({ projectId })).unwrap();
   };
 
   const handleDuplicateProject = async (project) => {
