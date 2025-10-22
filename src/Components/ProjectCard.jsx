@@ -8,6 +8,7 @@ import {
   FaClock,
 } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 
 // Helper function to format date
 const formatDate = (isoString) => {
@@ -65,17 +66,25 @@ function ProjectCard({
 }) {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      onDelete(id);
-    }
+    setDeleteDialogOpen(true);
     setIsMenuOpen(false);
   };
 
+  const handleConfirmDelete = () => {
+    onDelete(id);
+  };
+
   const handleDuplicate = () => {
-    onDuplicate();
+    setDuplicateDialogOpen(true);
     setIsMenuOpen(false);
+  };
+
+  const handleConfirmDuplicate = () => {
+    onDuplicate();
   };
 
   return (
@@ -156,6 +165,30 @@ function ProjectCard({
           onClick={() => setIsMenuOpen(false)}
         ></div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
+
+      {/* Duplicate Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={duplicateDialogOpen}
+        onClose={() => setDuplicateDialogOpen(false)}
+        onConfirm={handleConfirmDuplicate}
+        title="Duplicate Project"
+        message={`Do you want to create a copy of "${title}"?`}
+        confirmText="Duplicate"
+        cancelText="Cancel"
+        type="warning"
+      />
     </div>
   );
 }
