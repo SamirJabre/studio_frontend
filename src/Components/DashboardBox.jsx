@@ -11,8 +11,8 @@ import {
   fetchProjects,
   createProject,
   deleteProject,
+  duplicateProject,
 } from "../Redux/Slices/projectsSlice.js";
-import { duplicateProject } from "../APIS/projectsApi.js";
 
 function DashboardBox() {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ function DashboardBox() {
   };
 
   const handleDuplicateProject = async (project) => {
-    duplicateProject(project, dispatch);
+    await dispatch(duplicateProject({ project })).unwrap();
   };
 
   // Filter and sort projects based on search query and filter

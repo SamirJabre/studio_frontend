@@ -74,6 +74,29 @@ export const deleteProject = createAsyncThunk(
   }
 );
 
+export const duplicateProject = createAsyncThunk(
+  "projects/duplicateProject",
+  async ({ project }, { rejectWithValue }) => {
+    try {
+      const duplicatedProject = {
+        ...project,
+        id: undefined,
+        title: `${project.title} (Copy)`,
+        metadata: {
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          version: 1,
+        },
+      };
+      const response = await axios.post("/projects", duplicatedProject);
+      return response.data;
+    } catch (error) {
+      console.error("Error duplicating project:", error);
+      return rejectWithValue("Error duplicating project");
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projects",
   initialState: {
@@ -82,6 +105,7 @@ export const projectsSlice = createSlice({
     error: null,
     createdProjectError: null,
     deletedProjectError: null,
+    duplicatedProjectError: null,
   },
   reducers: {
     addProject: (state, action) => {
@@ -128,6 +152,14 @@ export const projectsSlice = createSlice({
       })
       .addCase(deleteProject.rejected, (state, action) => {
         state.deletedProjectError = action.payload;
+      });
+
+    builder
+      .addCase(duplicateProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload);
+      })
+      .addCase(duplicateProject.rejected, (state, action) => {
+        state.duplicatedProjectError = action.payload;
       });
   },
 });
