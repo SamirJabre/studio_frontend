@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
 import SearchInput from "../Base/SearchInput.jsx";
-// import ProjectConfiguration from "./ProjectConfiguration.jsx";
+import Toast from "../Base/Toast.jsx";
+import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import Filter from "../Base/Filter.jsx";
 import { FaFolder, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,10 +12,12 @@ import { deleteProject, duplicateProject } from "../APIS/projectsApi.js";
 
 function DashboardBox() {
   const dispatch = useDispatch();
-  const { projects, loading, error } = useSelector((state) => state.projects);
+  const { projects, loading, error, createdProjectError } = useSelector(
+    (state) => state.projects
+  );
 
   const [search, setSearch] = useState("");
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // const user_id = useSelector((state) => state?.auth?.user?.id);
 
   const handleSearch = (query) => {
@@ -29,8 +32,8 @@ function DashboardBox() {
     dispatch(fetchProjects());
   };
 
-  const handleCreateProject = async () => {
-    await dispatch(createProject()).unwrap();
+  const handleCreateProject = async (projectData) => {
+    await dispatch(createProject({ projectData })).unwrap();
   };
 
   const handleDeleteProject = async (projectId) => {
@@ -45,8 +48,10 @@ function DashboardBox() {
   const filter = useSelector((state) => state.filter.filter);
 
   // First filter by search, then sort
-  const filteredProjects = projects.filter((project) =>
-    project.title.toLowerCase().includes(search.toLowerCase())
+  const filteredProjects = (projects || []).filter(
+    (project) =>
+      project?.title &&
+      project.title.toLowerCase().includes(search.toLowerCase())
   );
 
   const sortedProjects = [...filteredProjects].sort((a, b) => {
@@ -112,11 +117,14 @@ function DashboardBox() {
               </div>
               <button
                 className="bg-[#5664F5] text-white flex items-center justify-center gap-1 px-4 py-2.5 rounded-lg hover:-translate-y-0.5 hover:shadow-lg transition-all hover:bg-[#4451d9] duration-200 whitespace-nowrap"
-                onClick={handleCreateProject}
+                onClick={() => setIsModalOpen(true)}
               >
                 <AddIcon fontSize="small" />
                 <span className="font-semibold">Create Project</span>
               </button>
+              {createdProjectError && (
+                <Toast message={createdProjectError} type="error" />
+              )}
             </div>
 
             {/* Search and Filter Row */}
@@ -152,7 +160,7 @@ function DashboardBox() {
           </div>
 
           {/* Empty State (if no projects) */}
-          {projects.length === 0 && (
+          {projects && projects.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-gray-500">
               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
                 <FaFolder className="text-2xl" />
@@ -167,11 +175,11 @@ function DashboardBox() {
       )}
 
       {/* Project Configuration Modal */}
-      {/* <ProjectConfiguration
+      <ProjectConfiguration
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleCreateProject}
-      /> */}
+      />
     </div>
   );
 }

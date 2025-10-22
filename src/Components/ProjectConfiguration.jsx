@@ -6,16 +6,9 @@ axios.defaults.baseURL = "http://localhost:4000";
 
 function ProjectConfiguration({ isOpen, onClose, onSave }) {
   const [projectData, setProjectData] = useState({
-    title: "",
+    title: "Untitled Project",
     description: "",
     color: "#5664F5",
-    nodes: [],
-    edges: [],
-    metadata: {
-      createdAt: new Date().toISOString(),
-      lastModified: new Date().toISOString(),
-      version: 1,
-    },
   });
 
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -44,17 +37,15 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (projectData.title.trim() && projectData.description.trim()) {
-      onSave(projectData);
-      // Reset form
-      setProjectData({
-        title: "",
-        description: "",
-        color: "#5664F5",
-      });
-      setShowColorPicker(false);
-      handleClose();
-    }
+    onSave(projectData);
+    // Reset form
+    setProjectData({
+      title: "Untitled Project",
+      description: "",
+      color: "#5664F5",
+    });
+    setShowColorPicker(false);
+    handleClose();
   };
 
   const handleClose = () => {
@@ -125,15 +116,14 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
                 className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-2"
               >
                 <span className="w-1.5 h-1.5 bg-[#5664F5] rounded-full"></span>
-                Project Title *
+                Project Title{" "}
+                <span className="opacity-70 text-xs">(Optional)</span>
               </label>
               <input
                 type="text"
                 id="title"
                 name="title"
-                value={projectData.title}
                 onChange={handleInputChange}
-                required
                 placeholder="My Awesome Project"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#5664F5] focus:border-[#5664F5] outline-none transition-all duration-200 hover:border-gray-300 text-base"
               />
@@ -145,14 +135,14 @@ function ProjectConfiguration({ isOpen, onClose, onSave }) {
                 className="flex items-center gap-2 text-sm font-bold text-gray-800 mb-2"
               >
                 <span className="w-1.5 h-1.5 bg-[#5664F5] rounded-full"></span>
-                Description *
+                Description{" "}
+                <span className="opacity-70 text-xs">(Optional)</span>
               </label>
               <textarea
                 id="description"
                 name="description"
                 value={projectData.description}
                 onChange={handleInputChange}
-                required
                 rows={4}
                 placeholder="Describe what makes your project special..."
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#5664F5] focus:border-[#5664F5] outline-none transition-all duration-200 hover:border-gray-300 resize-none text-base"

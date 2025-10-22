@@ -36,13 +36,11 @@ export const fetchProjects = createAsyncThunk(
 
 export const createProject = createAsyncThunk(
   "projects/createProject",
-  async (_, { rejectWithValue }) => {
+  async ({ projectData }, { rejectWithValue }) => {
     try {
       const user_id = jwtDecode(token).id;
       const newProject = {
-        title: "Untitled Project",
-        description: "",
-        color: "#5664F5",
+        ...projectData,
         nodes: [],
         edges: [],
         metadata: {
@@ -52,12 +50,13 @@ export const createProject = createAsyncThunk(
         },
         user_id,
       };
+      console.log(newProject);
       const response = await axios.post("/projects", newProject);
       console.log(response.data);
       return response.data;
     } catch (error) {
-      console.error("Error creating project:", error);
-      return rejectWithValue(error.message);
+      console.error(error);
+      return rejectWithValue("Error creating project");
     }
   }
 );
@@ -68,6 +67,7 @@ export const projectsSlice = createSlice({
     projects: [],
     loading: false,
     error: null,
+    createdProjectError: null,
   },
   reducers: {
     addProject: (state, action) => {
@@ -102,7 +102,7 @@ export const projectsSlice = createSlice({
         state.projects.push(action.payload);
       })
       .addCase(createProject.rejected, (state, action) => {
-        state.error = action.payload;
+        state.createdProjectError = action.payload;
       });
   },
 });
