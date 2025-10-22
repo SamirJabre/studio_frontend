@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthBanner from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
 import Toast from "../Base/Toast";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { registerRequest } from "../APIS/authApi.js";
+import { registerRequest } from "../Redux/Slices/authSlice.js";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ function Register() {
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const EMAIL_REGEX = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
 
@@ -75,31 +77,27 @@ function Register() {
     if (hasErrors) return;
 
     setSubmitting(true);
-    const result = await registerRequest(
-      formData.name,
-      formData.email,
-      formData.password,
-      dispatch
-    );
-    setSubmitting(false);
-
-    if (result && result.status === "error") {
+    try {
+      await dispatch(
+        registerRequest({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        })
+      ).unwrap();
       setToast({
-        message: result.message || "Registration failed.",
-        type: "error",
-      });
-      setErrors((prev) => ({
-        ...prev,
-        email: result.message || "Registration failed.",
-      }));
-    } else if (result && result.status === "success") {
-      setToast({
-        message: "Registration successful! Redirecting...",
+        message: "Login successful! Redirecting...",
         type: "success",
       });
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
+    } catch (error) {
+      setSubmitting(false);
+      setToast({
+        message: error || "Login failed.",
+        type: "error",
+      });
     }
   };
 
@@ -185,20 +183,34 @@ function Register() {
               >
                 Password
               </label>
-              <AuthInput
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
-                error={errors.password}
-                touched={touched.password}
-                required
-                minLength={5}
-                autoComplete="new-password"
-              />
+              <div className="relative">
+                <AuthInput
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                  error={errors.password}
+                  touched={touched.password}
+                  required
+                  minLength={5}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-5 top-7 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="w-5 h-5" />
+                  ) : (
+                    <FaEye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <button
