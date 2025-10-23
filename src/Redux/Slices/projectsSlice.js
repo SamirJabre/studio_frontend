@@ -105,6 +105,9 @@ export const projectsSlice = createSlice({
     projects: [],
     loading: false,
     error: null,
+    createProjectLoading: false,
+    deleteProjectLoading: false,
+    duplicateProjectLoading: false,
   },
   reducers: {
     emptyProjects: (state) => {
@@ -127,19 +130,37 @@ export const projectsSlice = createSlice({
         state.error = action.payload;
       });
 
-    builder.addCase(createProject.fulfilled, (state, action) => {
-      state.projects.push(action.payload);
-    });
+    builder
+      .addCase(createProject.pending, (state) => {
+        state.createProjectLoading = true;
+        state.error = null;
+      })
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload);
+        state.createProjectLoading = false;
+      });
 
-    builder.addCase(deleteProject.fulfilled, (state, action) => {
-      state.projects = state.projects.filter(
-        (project) => project.id !== action.payload
-      );
-    });
+    builder
+      .addCase(deleteProject.pending, (state) => {
+        state.deleteProjectLoading = true;
+        state.error = null;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.projects = state.projects.filter(
+          (project) => project.id !== action.payload
+        );
+        state.deleteProjectLoading = false;
+      });
 
-    builder.addCase(duplicateProject.fulfilled, (state, action) => {
-      state.projects.push(action.payload);
-    });
+    builder
+      .addCase(duplicateProject.pending, (state) => {
+        state.duplicateProjectLoading = true;
+        state.error = null;
+      })
+      .addCase(duplicateProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload);
+        state.duplicateProjectLoading = false;
+      });
   },
 });
 
