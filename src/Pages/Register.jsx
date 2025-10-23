@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import AuthBanner from "../Assets/Banners/AuthBG.jpg";
 import AuthInput from "../Base/AuthInput";
-import Toast from "../Base/Toast";
+import { useToast } from "../Context/ToastContext";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { registerRequest } from "../Redux/Slices/authSlice.js";
@@ -20,7 +20,7 @@ function Register() {
   });
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState(null);
+  const { showSuccess, showError } = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
   const EMAIL_REGEX = useMemo(() => /^[^\s@]+@[^\s@]+\.[^\s@]+$/, []);
@@ -85,33 +85,18 @@ function Register() {
           password: formData.password,
         })
       ).unwrap();
-      setToast({
-        message: "Login successful! Redirecting...",
-        type: "success",
-      });
+      showSuccess("Login successful! Redirecting...");
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
     } catch (error) {
       setSubmitting(false);
-      setToast({
-        message: error || "Login failed.",
-        type: "error",
-      });
+      showError(error || "Login failed.");
     }
   };
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-gray-200 p-4">
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-          duration={toast.type === "success" ? 1500 : 4000}
-        />
-      )}
-
       <div className="w-full max-w-[1200px] h-auto md:h-[700px] bg-white shadow-2xl flex flex-col md:flex-row rounded-2xl overflow-hidden">
         <div className="hidden md:flex md:w-1/2 items-center justify-center">
           <img

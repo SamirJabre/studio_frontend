@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:4000";
 
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("token")?.toString();
 
 axios.interceptors.request.use(
   (config) => {
@@ -21,6 +21,7 @@ export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
   async (_, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token")?.toString();
       const response = await axios.get("/projects", {
         params: {
           user_id: jwtDecode(token).id,
@@ -28,8 +29,9 @@ export const fetchProjects = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
+      console.log(token);
       console.log(error);
-      return rejectWithValue(error.message);
+      return rejectWithValue("Server Error, Please Try Again");
     }
   }
 );
@@ -103,9 +105,6 @@ export const projectsSlice = createSlice({
     projects: [],
     loading: false,
     error: null,
-    createdProjectError: null,
-    deletedProjectError: null,
-    duplicatedProjectError: null,
   },
   reducers: {
     emptyProjects: (state) => {
@@ -128,31 +127,19 @@ export const projectsSlice = createSlice({
         state.error = action.payload;
       });
 
-    builder
-      .addCase(createProject.fulfilled, (state, action) => {
-        state.projects.push(action.payload);
-      })
-      .addCase(createProject.rejected, (state, action) => {
-        state.createdProjectError = action.payload;
-      });
+    builder.addCase(createProject.fulfilled, (state, action) => {
+      state.projects.push(action.payload);
+    });
 
-    builder
-      .addCase(deleteProject.fulfilled, (state, action) => {
-        state.projects = state.projects.filter(
-          (project) => project.id !== action.payload
-        );
-      })
-      .addCase(deleteProject.rejected, (state, action) => {
-        state.deletedProjectError = action.payload;
-      });
+    builder.addCase(deleteProject.fulfilled, (state, action) => {
+      state.projects = state.projects.filter(
+        (project) => project.id !== action.payload
+      );
+    });
 
-    builder
-      .addCase(duplicateProject.fulfilled, (state, action) => {
-        state.projects.push(action.payload);
-      })
-      .addCase(duplicateProject.rejected, (state, action) => {
-        state.duplicatedProjectError = action.payload;
-      });
+    builder.addCase(duplicateProject.fulfilled, (state, action) => {
+      state.projects.push(action.payload);
+    });
   },
 });
 

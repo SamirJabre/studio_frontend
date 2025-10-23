@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
 import SearchInput from "../Base/SearchInput.jsx";
-import Toast from "../Base/Toast.jsx";
+import { useToast } from "../Context/ToastContext.jsx";
 import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import Filter from "../Base/Filter.jsx";
 import { FaFolder, FaExclamationTriangle, FaSpinner } from "react-icons/fa";
@@ -16,10 +16,8 @@ import {
 
 function DashboardBox() {
   const dispatch = useDispatch();
-  const { projects, loading, error, createdProjectError } = useSelector(
-    (state) => state.projects
-  );
-
+  const { projects, loading, error } = useSelector((state) => state.projects);
+  const { showError } = useToast();
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   // const user_id = useSelector((state) => state?.auth?.user?.id);
@@ -37,15 +35,27 @@ function DashboardBox() {
   };
 
   const handleCreateProject = async (projectData) => {
-    await dispatch(createProject({ projectData })).unwrap();
+    try {
+      await dispatch(createProject({ projectData })).unwrap();
+    } catch (error) {
+      showError("Error Creating Project, Try Again Later");
+    }
   };
 
   const handleDeleteProject = async (projectId) => {
-    await dispatch(deleteProject({ projectId })).unwrap();
+    try {
+      await dispatch(deleteProject({ projectId })).unwrap();
+    } catch (error) {
+      showError("Error Deleting Project, Try Again Later");
+    }
   };
 
   const handleDuplicateProject = async (project) => {
-    await dispatch(duplicateProject({ project })).unwrap();
+    try {
+      await dispatch(duplicateProject({ project })).unwrap();
+    } catch (error) {
+      showError("Error Duplicating Project, Try Again Later");
+    }
   };
 
   // Filter and sort projects based on search query and filter
@@ -126,9 +136,6 @@ function DashboardBox() {
                 <AddIcon fontSize="small" />
                 <span className="font-semibold">Create Project</span>
               </button>
-              {createdProjectError && (
-                <Toast message={createdProjectError} type="error" />
-              )}
             </div>
 
             {/* Search and Filter Row */}

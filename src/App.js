@@ -10,6 +10,7 @@ import AccessDenied from "./Pages/AccessDenied";
 import ProjectNotFound from "./Pages/ProjectNotFound";
 import RequireAuth from "./Routes/RequireAuth";
 import RequireGuest from "./Routes/RequireGuest";
+import { ToastProvider } from "./Context/ToastContext";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -39,28 +40,30 @@ axios.defaults.baseURL = "http://localhost:4000";
 const App = () => {
   return (
     // <button onClick={fetchUsers}>Fetch Users</button>
-    <BrowserRouter>
-      <Routes>
-        {/* Public route available to everyone */}
-        <Route path="/" element={<Landing />} />
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public route available to everyone */}
+          <Route path="/" element={<Landing />} />
 
-        {/* Guest-only routes: hidden when authenticated */}
-        <Route element={<RequireGuest />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+          {/* Guest-only routes: hidden when authenticated */}
+          <Route element={<RequireGuest />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
 
-        {/* Protected routes: require authentication */}
-        <Route element={<RequireAuth />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/editor/:id" element={<Editor />} />
-        </Route>
+          {/* Protected routes: require authentication */}
+          <Route element={<RequireAuth />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/editor/:id" element={<Editor />} />
+          </Route>
 
-        {/* Optional utility routes */}
-        <Route path="/accessdenied" element={<AccessDenied />} />
-        <Route path="/404" element={<ProjectNotFound />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Optional utility routes */}
+          <Route path="/accessdenied" element={<AccessDenied />} />
+          <Route path="/404" element={<ProjectNotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 };
 export default App;
