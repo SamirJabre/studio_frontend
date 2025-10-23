@@ -5,6 +5,7 @@ import { useToast } from "../Context/ToastContext.jsx";
 import ProjectConfiguration from "./ProjectConfiguration.jsx";
 import Filter from "../Base/Filter.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
+import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 import { FaFolder, FaExclamationTriangle } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
@@ -28,6 +29,9 @@ function DashboardBox() {
   const { showError } = useToast();
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null);
   // const user_id = useSelector((state) => state?.auth?.user?.id);
 
   const handleSearch = (query) => {
@@ -50,17 +54,27 @@ function DashboardBox() {
     }
   };
 
-  const handleDeleteProject = async (projectId) => {
+  const handleDeleteProject = (projectId, projectTitle) => {
+    setSelectedProject({ id: projectId, title: projectTitle });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      await dispatch(deleteProject({ projectId })).unwrap();
+      await dispatch(deleteProject({ projectId: selectedProject.id })).unwrap();
     } catch (error) {
       showError("Error Deleting Project, Try Again Later");
     }
   };
 
-  const handleDuplicateProject = async (project) => {
+  const handleDuplicateProject = (project) => {
+    setSelectedProject(project);
+    setDuplicateDialogOpen(true);
+  };
+
+  const handleConfirmDuplicate = async () => {
     try {
-      await dispatch(duplicateProject({ project })).unwrap();
+      await dispatch(duplicateProject({ project: selectedProject })).unwrap();
     } catch (error) {
       showError("Error Duplicating Project, Try Again Later");
     }
@@ -176,7 +190,9 @@ function DashboardBox() {
                   description={project.description}
                   metadata={project.metadata}
                   color={project.color}
-                  onDelete={handleDeleteProject}
+                  onDelete={() =>
+                    handleDeleteProject(project.id, project.title)
+                  }
                   onDuplicate={() => handleDuplicateProject(project)}
                 />
               ))}
@@ -202,6 +218,30 @@ function DashboardBox() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleCreateProject}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Project"
+        message={`Are you sure you want to delete "${selectedProject?.title}"? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
+
+      {/* Duplicate Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={duplicateDialogOpen}
+        onClose={() => setDuplicateDialogOpen(false)}
+        onConfirm={handleConfirmDuplicate}
+        title="Duplicate Project"
+        message={`Do you want to create a copy of "${selectedProject?.title}"?`}
+        confirmText="Duplicate"
+        cancelText="Cancel"
+        type="warning"
       />
     </div>
   );
