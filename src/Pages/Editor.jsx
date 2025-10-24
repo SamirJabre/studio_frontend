@@ -7,12 +7,13 @@ import EditorBar from "../Components/EditorBar";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProject, updateProject } from "../Redux/Slices/projectSlice.js";
 import ConfigurationPanel from "../Components/ConfigurationPanel";
+import LoadingSpinner from "../Components/LoadingSpinner.jsx";
 
 function Editor() {
   const dispatch = useDispatch();
   const projectId = useParams().id;
   const navigate = useNavigate();
-  const project = useSelector((state) => state.project.currentProject);
+  const { currentProject, loading } = useSelector((state) => state.project);
 
   useEffect(() => {
     dispatch(fetchProject({ projectId, navigate })).unwrap();
@@ -24,19 +25,30 @@ function Editor() {
 
   return (
     <div className="w-screen h-screen flex justify-between items-center">
-      <EditorBar project={project} onProjectUpdate={handleProjectUpdate} />
-      <LeftPanel />
-      <ReactFlowProvider>
-        <CenterCanvas
-          project={project}
-          user_id={project.user_id}
-          projectId={projectId}
-        />
-      </ReactFlowProvider>
-      <ConfigurationPanel
-        project={project}
-        onProjectUpdate={handleProjectUpdate}
-      />
+      {loading ? (
+        <div className="w-full h-full flex justify-center items-center">
+          <LoadingSpinner message="Loading Project..." />
+        </div>
+      ) : (
+        <>
+          <EditorBar
+            project={currentProject}
+            onProjectUpdate={handleProjectUpdate}
+          />
+          <LeftPanel />
+          <ReactFlowProvider>
+            <CenterCanvas
+              project={currentProject}
+              user_id={currentProject.user_id}
+              projectId={projectId}
+            />
+          </ReactFlowProvider>
+          <ConfigurationPanel
+            project={currentProject}
+            onProjectUpdate={handleProjectUpdate}
+          />
+        </>
+      )}
     </div>
   );
 }

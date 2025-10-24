@@ -196,10 +196,6 @@ function CenterCanvas({ project, user_id }) {
             ...project,
             nodes: updatedNodes,
             edges: edges,
-            metadata: {
-              ...project.metadata,
-              lastModified: new Date().toISOString(),
-            },
           },
         })
       );

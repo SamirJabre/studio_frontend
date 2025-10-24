@@ -49,6 +49,7 @@ const ApiNodeConfig = forwardRef(({ data }, ref) => {
         </label>
         <input
           required
+          value={apiEndpoint}
           onChange={(e) => setApiEndpoint(e.target.value)}
           type="url"
           placeholder="https://api.example.com/endpoint"
@@ -61,6 +62,7 @@ const ApiNodeConfig = forwardRef(({ data }, ref) => {
           Method
         </label>
         <select
+          value={method}
           className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-[#8B5CF6] focus:border-[#8B5CF6] outline-none transition-all"
           onChange={(e) => setMethod(e.target.value)}
         >
@@ -77,6 +79,7 @@ const ApiNodeConfig = forwardRef(({ data }, ref) => {
           Request Headers (JSON)
         </label>
         <textarea
+          value={requestHeaders}
           onChange={(e) => setRequestHeaders(e.target.value)}
           rows={3}
           placeholder='{"Content-Type": "application/json"}'
@@ -89,6 +92,7 @@ const ApiNodeConfig = forwardRef(({ data }, ref) => {
           Request Body (JSON)
         </label>
         <textarea
+          value={requestBody}
           onChange={(e) => setRequestBody(e.target.value)}
           rows={3}
           placeholder='{"key": "value"}'

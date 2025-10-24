@@ -33,7 +33,13 @@ export const updateProject = createAsyncThunk(
   "project/updateProject",
   async ({ updatedProject }, { rejectWithValue }) => {
     try {
-      return updatedProject;
+      return {
+        ...updatedProject,
+        metadata: {
+          ...updatedProject.metadata,
+          lastModified: new Date().toISOString(),
+        },
+      };
     } catch (error) {
       return rejectWithValue("Failed to update project.");
     }

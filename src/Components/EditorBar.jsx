@@ -1,19 +1,24 @@
 import { useState } from "react";
-import { FaCopy, FaTrash } from "react-icons/fa";
+import { FaCopy, FaTrash, FaSave } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import ConfirmDialog from "../Base/ConfirmDialog.jsx";
+import LoadingSpinner from "./LoadingSpinner.jsx";
+import { saveProject } from "../APIS/projectsApi.js";
 
 function EditorBar({ project, onProjectUpdate }) {
   const navigate = useNavigate();
 
   const selectedNode = useSelector((state) => state.node);
   const selectedEdge = useSelector((state) => state.edge);
+  const currentProject = useSelector((state) => state.project.currentProject);
   console.log(selectedNode);
   console.log(selectedEdge);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [projectTitle, setProjectTitle] = useState(project?.title || "");
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleDuplicate = async () => {
     try {
@@ -92,44 +97,91 @@ function EditorBar({ project, onProjectUpdate }) {
     }
   };
 
+  const saveChanges = async () => {
+    setIsSaving(true);
+    await saveProject(project.id, currentProject, projectTitle);
+    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
+    setIsSaving(false);
+  };
+
+  const handleTitleChange = (e) => {
+    setProjectTitle(e.target.value);
+  };
+
   return (
     <>
-      <nav className="fixed top-3 left-1/2 -translate-x-1/2 w-auto h-12 bg-white rounded-lg z-40 shadow-lg border border-gray-200">
-        <div className="w-full h-full flex items-center gap-2 px-3">
+      {/* Loading Spinner Overlay */}
+      {isSaving && (
+        <div className="fixed inset-0 bg-black/30 z-[60] flex items-center justify-center">
+          <LoadingSpinner message="Saving Project..." size="Large" />
+        </div>
+      )}
+
+      <nav className="fixed top-3 left-1/2 -translate-x-1/2 w-auto max-w-[90vw] h-14 bg-white rounded-xl z-40 shadow-xl border border-gray-200">
+        <div className="w-full h-full flex items-center gap-3 px-4">
+          {/* Back Button */}
           <button
             onClick={() => navigate("/dashboard")}
-            className="h-8 px-3 bg-[#5664F5] text-white rounded-md hover:bg-[#4451d9] transition-all duration-300 flex items-center gap-2 font-medium text-sm"
+            className="h-9 px-4 bg-gradient-to-br from-[#5664F5] to-[#4451d9] text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
           >
             <FaLeftLong className="text-xs" />
-            <span>Back to Dashboard</span>
+            <span className="hidden sm:inline">Dashboard</span>
           </button>
 
-          <div className="h-6 w-px bg-gray-300"></div>
+          <div className="h-8 w-px bg-gray-300"></div>
 
-          <button
-            onClick={() => setDuplicateDialogOpen(true)}
-            disabled={!selectedNode.nodeId}
-            className={`h-8 w-8 rounded-md transition-all duration-300 flex items-center justify-center border-2 ${
-              selectedNode.nodeId
-                ? "border-[#5664F5] text-[#5664F5] hover:bg-[#5664F5] hover:text-white cursor-pointer"
-                : "border-gray-300 text-gray-300 cursor-not-allowed"
-            }`}
-            title="Duplicate Node"
-          >
-            <FaCopy className="text-sm" />
-          </button>
+          {/* Project Title Input */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <input
+              type="text"
+              value={projectTitle || ""}
+              onChange={handleTitleChange}
+              placeholder="Project Title"
+              className="h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#5664F5] focus:border-transparent transition-all duration-200 w-full max-w-xs"
+            />
+          </div>
 
+          <div className="h-8 w-px bg-gray-300"></div>
+
+          {/* Node Actions */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setDuplicateDialogOpen(true)}
+              disabled={!selectedNode.nodeId}
+              className={`h-9 w-9 rounded-lg transition-all duration-300 flex items-center justify-center ${
+                selectedNode.nodeId
+                  ? "bg-blue-50 text-[#5664F5] hover:bg-[#5664F5] hover:text-white hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
+              }`}
+              title="Duplicate Node"
+            >
+              <FaCopy className="text-sm" />
+            </button>
+
+            <button
+              onClick={() => setDeleteDialogOpen(true)}
+              disabled={!selectedNode?.nodeId && !selectedEdge?.edgeId}
+              className={`h-9 w-9 rounded-lg transition-all duration-300 flex items-center justify-center ${
+                selectedNode?.nodeId || selectedEdge?.edgeId
+                  ? "bg-red-50 text-red-500 hover:bg-red-500 hover:text-white hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed"
+              }`}
+              title="Delete Selected"
+            >
+              <FaTrash className="text-sm" />
+            </button>
+          </div>
+
+          <div className="h-8 w-px bg-gray-300"></div>
+
+          {/* Save Button */}
           <button
-            onClick={() => setDeleteDialogOpen(true)}
-            disabled={!selectedNode?.nodeId && !selectedEdge?.edgeId}
-            className={`h-8 w-8 rounded-md transition-all duration-300 flex items-center justify-center border-2 ${
-              selectedNode?.nodeId || selectedEdge?.edgeId
-                ? "border-[#5664F5] text-[#5664F5] hover:bg-[#5664F5] hover:text-white cursor-pointer"
-                : "border-gray-300 text-gray-300 cursor-not-allowed"
-            }`}
-            title="Delete Selected"
+            onClick={saveChanges}
+            disabled={isSaving}
+            className="h-9 px-3 bg-green-500 text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
-            <FaTrash className="text-sm" />
+            <FaSave />
+            <span>{isSaving ? "Saving..." : "Save"}</span>
           </button>
         </div>
       </nav>
