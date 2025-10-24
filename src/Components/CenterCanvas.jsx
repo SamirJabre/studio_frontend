@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
 import Node from "../Base/Node.jsx";
+import CustomEdge from "../Base/CustomEdge.jsx";
 import { updateProject } from "../Redux/Slices/projectSlice.js";
 
 function CenterCanvas({ project, user_id }) {
@@ -106,6 +107,7 @@ function CenterCanvas({ project, user_id }) {
         }`,
         source: params.source,
         target: params.target,
+        type: "customEdge",
         ...(params.sourceHandle && { sourceHandle: params.sourceHandle }),
       };
 
@@ -215,6 +217,10 @@ function CenterCanvas({ project, user_id }) {
     conditionNode: Node,
   };
 
+  const edgeTypes = {
+    customEdge: CustomEdge,
+  };
+
   return (
     <>
       <div className={`h-full w-full z-30`} ref={reactFlowWrapper}>
@@ -222,6 +228,7 @@ function CenterCanvas({ project, user_id }) {
           nodes={nodes}
           nodeTypes={nodeTypes}
           edges={edges}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}

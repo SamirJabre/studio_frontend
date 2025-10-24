@@ -303,39 +303,46 @@
         {
           "id": "a3f7-b8e2",
           "source": "a3f7",
-          "target": "b8e2"
+          "target": "b8e2",
+          "type": "customEdge"
         },
         {
           "id": "b8e2-c5d9",
           "source": "b8e2",
-          "target": "c5d9"
+          "target": "c5d9",
+          "type": "customEdge"
         },
         {
           "id": "c5d9-e4b3",
           "source": "c5d9",
-          "target": "e4b3"
+          "target": "e4b3",
+          "type": "customEdge"
         },
         {
           "id": "e4b3-c5d8",
           "source": "e4b3",
-          "target": "c5d8"
+          "target": "c5d8",
+          "type": "customEdge"
         },
         {
           "id": "c5d8-d1a6",
           "source": "c5d8",
-          "target": "d1a6"
+          "target": "d1a6",
+          "type": "customEdge"
         },
         {
           "id": "c5d8-node-1761329762886-b",
           "source": "c5d8",
           "target": "node-1761329762886",
-          "sourceHandle": "b"
+          "sourceHandle": "b",
+          "type": "customEdge"
         },
         {
           "id": "c5d8-node-1761329827653-c",
           "source": "c5d8",
           "target": "node-1761329827653",
-          "sourceHandle": "c"
+          "sourceHandle": "c",
+          "type": "customEdge"
         }
       ],
       "metadata": {
