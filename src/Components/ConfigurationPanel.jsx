@@ -37,7 +37,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
     // dispatch(setNodeId(null));
   };
 
-  
   const getCurrentNode = () => {
     if (!project || !project.nodes || !selectedNodeId) return null;
     return project.nodes.find((node) => node.id === selectedNodeId);
@@ -159,13 +158,6 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
 
   return (
     <>
-      {isOpen && (
-        <div
-          onClick={closePanel}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-all duration-300 animate-fadeIn"
-        />
-      )}
-
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-50 flex flex-col transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"

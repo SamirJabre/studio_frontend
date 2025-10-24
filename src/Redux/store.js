@@ -6,6 +6,7 @@ import nodeSlice from "./Slices/nodeSlice";
 import projectsSlice from "./Slices/projectsSlice";
 import edgeSlice from "./Slices/edgeSlice";
 import tabSlice from "./Slices/tabSlice";
+import projectSlice from "./Slices/projectSlice.js";
 
 import {
   persistStore,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   node: nodeSlice,
   edge: edgeSlice,
   projects: projectsSlice,
+  project: projectSlice,
   tab: tabSlice,
 });
 
