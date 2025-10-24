@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setNodeType } from "../Redux/Slices/nodeSlice.js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   FaTimes,
   FaWpforms,
@@ -23,7 +23,6 @@ function ConfigurationPanel({ project, onProjectUpdate }) {
   const selectedNodeId = useSelector((state) => state.node.nodeId);
   const isOpen = Boolean(selectedNodeType);
   const configRef = useRef(null);
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (selectedNodeType) {
@@ -47,8 +46,6 @@ function ConfigurationPanel({ project, onProjectUpdate }) {
   // Handle save configuration
   const handleSave = async () => {
     if (!configRef.current || !currentNode) return;
-
-    setIsSaving(true);
     try {
       // Get data from the config component
       const configData = configRef.current.getData();
@@ -95,8 +92,6 @@ function ConfigurationPanel({ project, onProjectUpdate }) {
       closePanel();
     } catch (error) {
       console.error("Error saving configuration:", error);
-    } finally {
-      setIsSaving(false);
     }
   };
 

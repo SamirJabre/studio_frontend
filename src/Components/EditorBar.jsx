@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { FaCopy, FaTrash } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { deleteEdge, deleteNode, duplicateNode } from "../APIS/editorApi.js";
 import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 
-function EditorBar({ project, projectId, onProjectUpdate }) {
+function EditorBar({ project, onProjectUpdate }) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const selectedNode = useSelector((state) => state.node);
   const selectedEdge = useSelector((state) => state.edge);
@@ -17,22 +15,40 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
 
-  const handleDuplicate = () => {
+  const handleDuplicate = async () => {
     try {
       if (selectedNode?.nodeId) {
-        const newNode = project.nodes.find(
+        const originalNode = project.nodes.find(
           (node) => node.id === selectedNode.nodeId
         );
+
+        if (!originalNode) return;
+
+        // Create a completely new node with a unique ID and offset position
+        const newNodeId = `node-${Date.now()}`;
+        const duplicatedNode = {
+          ...originalNode,
+          id: newNodeId,
+          position: {
+            x: originalNode.position.x + 50,
+            y: originalNode.position.y + 50,
+          },
+          // Deep copy the data to avoid reference issues
+          data: JSON.parse(JSON.stringify(originalNode.data)),
+        };
+
         const updatedProject = {
           ...project,
-          nodes: [...project.nodes, { ...newNode, id: Date.now() }],
+          nodes: [...project.nodes, duplicatedNode],
+          metadata: {
+            ...project.metadata,
+            lastModified: new Date().toISOString(),
+          },
         };
-        duplicateNode(projectId, updatedProject, dispatch);
 
-        if (onProjectUpdate) onProjectUpdate(updatedProject);
+        await onProjectUpdate(updatedProject);
         return;
       }
-
       return;
     } catch (e) {
       console.log(e);
@@ -49,9 +65,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
             (edge) => edge.id !== selectedEdge.edgeId
           ),
         };
-        deleteEdge(projectId, updatedProject, dispatch);
-
-        if (onProjectUpdate) onProjectUpdate(updatedProject);
+        await onProjectUpdate(updatedProject);
         return;
       }
 
@@ -67,9 +81,7 @@ function EditorBar({ project, projectId, onProjectUpdate }) {
               edge.target !== selectedNode.nodeId
           ),
         };
-        deleteNode(projectId, updatedProject, dispatch);
-
-        if (onProjectUpdate) onProjectUpdate(updatedProject);
+        await onProjectUpdate(updatedProject);
         return;
       }
 

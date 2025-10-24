@@ -26,6 +26,8 @@ function CenterCanvas({ project, user_id }) {
   const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
+    console.log(project);
+
     if (userId == null || user_id == null) return;
     project.nodes.length === 0 && dispatch(setNodeId(null));
 
@@ -186,7 +188,6 @@ function CenterCanvas({ project, user_id }) {
 
       // Update local state
       const updatedNodes = [...nodes, newNode];
-      setNodes(updatedNodes);
 
       // Dispatch to update project in database
       dispatch(

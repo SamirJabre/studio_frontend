@@ -18,17 +18,13 @@ function Editor() {
     dispatch(fetchProject({ projectId, navigate })).unwrap();
   }, [dispatch, navigate, projectId]);
 
-  const handleProjectUpdate = (updatedProject) => {
-    dispatch(updateProject({ updatedProject })).unwrap();
+  const handleProjectUpdate = async (updatedProject) => {
+    await dispatch(updateProject({ updatedProject })).unwrap();
   };
 
   return (
     <div className="w-screen h-screen flex justify-between items-center">
-      <EditorBar
-        project={project}
-        projectId={projectId}
-        onProjectUpdate={handleProjectUpdate}
-      />
+      <EditorBar project={project} onProjectUpdate={handleProjectUpdate} />
       <LeftPanel />
       <ReactFlowProvider>
         <CenterCanvas
@@ -39,7 +35,6 @@ function Editor() {
       </ReactFlowProvider>
       <ConfigurationPanel
         project={project}
-        projectId={projectId}
         onProjectUpdate={handleProjectUpdate}
       />
     </div>
