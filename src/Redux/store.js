@@ -5,6 +5,8 @@ import leftPanelSlice from "./Slices/leftPanelSlice";
 import nodeSlice from "./Slices/nodeSlice";
 import projectsSlice from "./Slices/projectsSlice";
 import edgeSlice from "./Slices/edgeSlice";
+import tabSlice from "./Slices/tabSlice";
+
 import {
   persistStore,
   persistReducer,
@@ -24,6 +26,7 @@ const rootReducer = combineReducers({
   node: nodeSlice,
   edge: edgeSlice,
   projects: projectsSlice,
+  tab: tabSlice,
 });
 
 const persistConfig = {
