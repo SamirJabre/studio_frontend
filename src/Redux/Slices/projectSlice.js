@@ -46,11 +46,32 @@ export const updateProject = createAsyncThunk(
   }
 );
 
+export const saveProject = createAsyncThunk(
+  "project/saveProjectApi",
+  async ({ projectId, currentProject, projectTitle }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`projects/${projectId}`, {
+        ...currentProject,
+        title: projectTitle,
+        metadata: {
+          ...currentProject.metadata,
+          lastModified: new Date().toISOString(),
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error saving project:", error);
+      return rejectWithValue("Failed to save project.");
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
     currentProject: [],
     loading: false,
+    modified: false,
   },
   reducers: {
     emptyCurrentProject: (state) => {
@@ -73,6 +94,16 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.fulfilled, (state, action) => {
         state.loading = false;
+        state.modified = true;
+        state.currentProject = action.payload;
+      });
+    builder
+      .addCase(saveProject.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(saveProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.modified = false;
         state.currentProject = action.payload;
       });
   },

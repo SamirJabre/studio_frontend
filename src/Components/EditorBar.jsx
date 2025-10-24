@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { FaCopy, FaTrash, FaSave } from "react-icons/fa";
 import { FaLeftLong } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
-import { saveProject } from "../APIS/projectsApi.js";
+import { saveProject } from "../Redux/Slices/projectSlice.js";
 
 function EditorBar({ project, onProjectUpdate }) {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const selectedNode = useSelector((state) => state.node);
   const selectedEdge = useSelector((state) => state.edge);
-  const currentProject = useSelector((state) => state.project.currentProject);
+  const { currentProject, modified } = useSelector((state) => state.project);
   console.log(selectedNode);
   console.log(selectedEdge);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -99,7 +99,9 @@ function EditorBar({ project, onProjectUpdate }) {
 
   const saveChanges = async () => {
     setIsSaving(true);
-    await saveProject(project.id, currentProject, projectTitle);
+    await dispatch(
+      saveProject({ projectId: project.id, currentProject, projectTitle })
+    ).unwrap();
     await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
     setIsSaving(false);
   };
@@ -177,7 +179,7 @@ function EditorBar({ project, onProjectUpdate }) {
           {/* Save Button */}
           <button
             onClick={saveChanges}
-            disabled={isSaving}
+            disabled={isSaving || !modified}
             className="h-9 px-3 bg-green-500 text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
           >
             <FaSave />
