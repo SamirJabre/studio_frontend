@@ -233,8 +233,8 @@
         {
           "id": "e4b3",
           "position": {
-            "x": -77.57399715722374,
-            "y": -242.0876817613322
+            "x": -73.09331698051058,
+            "y": -276.0128316707319
           },
           "data": {
             "label": "Something API",
@@ -248,8 +248,8 @@
             "width": 167,
             "height": 60
           },
-          "selected": false,
-          "dragging": false
+          "selected": true,
+          "dragging": true
         }
       ],
       "edges": [
@@ -281,7 +281,7 @@
       ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
-        "lastModified": "2025-10-21T00:40:43.171Z",
+        "lastModified": "2025-10-24T06:56:20.219Z",
         "version": 1
       }
     },
