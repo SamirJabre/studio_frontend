@@ -40,10 +40,10 @@ export const deleteNode = async (projectId, updatedProject, dispatch) => {
   }
 };
 
-export const duplicateNode = async (projectId, updatedProject, dispatch) => {
+export const deleteEdge = async (projectId, updatedProject, dispatch) => {
   try {
     const response = await axios.put(`/projects/${projectId}`, updatedProject);
-    dispatch(setNodeId(null));
+    dispatch(setEdgeId(null));
     console.log(response.data);
   } catch (e) {
     console.log(e);
@@ -51,10 +51,10 @@ export const duplicateNode = async (projectId, updatedProject, dispatch) => {
   }
 };
 
-export const deleteEdge = async (projectId, updatedProject, dispatch) => {
+export const duplicateNode = async (projectId, updatedProject, dispatch) => {
   try {
     const response = await axios.put(`/projects/${projectId}`, updatedProject);
-    dispatch(setEdgeId(null));
+    dispatch(setNodeId(null));
     console.log(response.data);
   } catch (e) {
     console.log(e);

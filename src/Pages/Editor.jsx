@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { ReactFlowProvider } from "@xyflow/react";
 import LeftPanel from "../Components/LeftPanel";
 import CenterCanvas from "../Components/CenterCanvas";
 import EditorBar from "../Components/EditorBar";
-import { fetchProject } from "../APIS/editorApi";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchProject, updateProject } from "../Redux/Slices/projectSlice.js";
 import ConfigurationPanel from "../Components/ConfigurationPanel";
 
 function Editor() {
+  const dispatch = useDispatch();
   const projectId = useParams().id;
   const navigate = useNavigate();
-  const [project, setProject] = useState([]);
+  const project = useSelector((state) => state.project.currentProject);
 
   useEffect(() => {
-    fetchProject(projectId, setProject, navigate);
-  }, [navigate, projectId]);
+    dispatch(fetchProject({ projectId, navigate })).unwrap();
+  }, [dispatch, navigate, projectId]);
 
   const handleProjectUpdate = (updatedProject) => {
-    setProject(updatedProject);
+    dispatch(updateProject({ updatedProject })).unwrap();
   };
 
   return (

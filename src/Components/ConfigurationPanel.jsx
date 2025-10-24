@@ -9,7 +9,7 @@ import {
   FaCodeBranch,
   FaCog,
 } from "react-icons/fa";
-import { updateNodeData } from "../APIS/projectsApi.js";
+// import { updateNodeData } from "../APIS/projectsApi.js";
 
 // Import individual node configuration components
 import FormNodeConfig from "./NodeConfigurations/FormNodeConfig.jsx";
@@ -17,7 +17,7 @@ import EmailNodeConfig from "./NodeConfigurations/EmailNodeConfig.jsx";
 import ApiNodeConfig from "./NodeConfigurations/ApiNodeConfig.jsx";
 import ConditionNodeConfig from "./NodeConfigurations/ConditionNodeConfig.jsx";
 
-function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
+function ConfigurationPanel({ project, onProjectUpdate }) {
   const dispatch = useDispatch();
   const selectedNodeType = useSelector((state) => state.node.nodeType);
   const selectedNodeId = useSelector((state) => state.node.nodeId);
@@ -52,25 +52,53 @@ function ConfigurationPanel({ project, projectId, onProjectUpdate }) {
     try {
       // Get data from the config component
       const configData = configRef.current.getData();
+      const updatedNodes = project.nodes.map((node) =>
+        node.id === selectedNodeId
+          ? {
+              ...node,
+              data: {
+                ...currentNode.data,
+                ...configData,
+              },
+            }
+          : node
+      );
+      console.log(configData);
+      console.log(updatedNodes);
+      console.log(project.nodes);
+      const updatedProject = {
+        ...project,
+        nodes: updatedNodes,
+        metadata: {
+          ...project.metadata,
+          lastModified: new Date().toISOString(),
+        },
+      };
+
+      console.log(updatedProject);
+
+      onProjectUpdate(updatedProject);
 
       // Update node data via API
-      const result = await updateNodeData(project, projectId, selectedNodeId, {
-        ...currentNode.data,
-        ...configData,
-      });
+      // const result = await updateNodeData(project, projectId, selectedNodeId, {
+      //   ...currentNode.data,
+      //   ...configData,
+      // });
 
-      if (result.success) {
-        // Update local project state
-        const updatedProject = {
-          ...project,
-          nodes: result.updatedNodes,
-        };
-        onProjectUpdate(updatedProject);
+      // if (result.success) {
+      //   // Update local project state
+      //   const updatedProject = {
+      //     ...project,
+      //     nodes: result.updatedNodes,
+      //   };
+      //   onProjectUpdate(updatedProject);
 
-        // Show success feedback
-        console.log("Configuration saved successfully!");
-        closePanel();
-      }
+      //   // Show success feedback
+      //   console.log("Configuration saved successfully!");
+      //   closePanel();
+      // }
+
+      closePanel();
     } catch (error) {
       console.error("Error saving configuration:", error);
     } finally {

@@ -13,10 +13,10 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { setNodeId } from "../Redux/Slices/nodeSlice.js";
 import { setEdgeId } from "../Redux/Slices/edgeSlice.js";
-import { dragNodes, connectNodes, createNode } from "../APIS/projectsApi.js";
 import Node from "../Base/Node.jsx";
+import { updateProject } from "../Redux/Slices/projectSlice.js";
 
-function CenterCanvas({ project, projectId, user_id }) {
+function CenterCanvas({ project, user_id }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userId = useSelector((state) => state?.auth?.user?.id);
@@ -32,8 +32,9 @@ function CenterCanvas({ project, projectId, user_id }) {
     // Compare after normalizing types
     if (String(userId) === String(user_id)) {
       const { nodes = [], edges = [] } = project || {};
-      setNodes(nodes);
-      setEdges(edges);
+      // Create deep copies to avoid mutation errors with React Flow
+      setNodes(JSON.parse(JSON.stringify(nodes)));
+      setEdges(JSON.parse(JSON.stringify(edges)));
     } else {
       navigate("/accessdenied");
     }
@@ -66,10 +67,15 @@ function CenterCanvas({ project, projectId, user_id }) {
 
       const { dragging } = changes[0];
       if (dragging === false) {
-        dragNodes(project, projectId, nodes, edges);
+        // dragNodes(project, projectId, nodes, edges);
+        dispatch(
+          updateProject({
+            updatedProject: { ...project, nodes, edges },
+          })
+        );
       }
     },
-    [dispatch, edges, nodes, project, projectId]
+    [dispatch, edges, nodes, project]
   );
   const onEdgesChange = useCallback(
     (changes) => {
@@ -99,11 +105,14 @@ function CenterCanvas({ project, projectId, user_id }) {
       };
 
       setEdges((edgesSnapshot) => [...edgesSnapshot, newEdge]);
-
-      connectNodes(project, projectId, nodes, [...edges, newEdge]);
+      dispatch(
+        updateProject({
+          updatedProject: { ...project, nodes, edges: [...edges, newEdge] },
+        })
+      );
     },
 
-    [edges, nodes, project, projectId]
+    [dispatch, edges, nodes, project]
   );
 
   const onDragOver = useCallback((event) => {
@@ -123,73 +132,78 @@ function CenterCanvas({ project, projectId, user_id }) {
         y: event.clientY,
       });
 
-      // Capture current nodes and create new node
-      setNodes((currentNodes) => {
-        // Call API with current state
-        createNode(project, projectId, nodeType, position, currentNodes).then(
-          (result) => {
-            if (!result.success) {
-              console.error("Failed to save node to database");
-            }
-          }
-        );
+      // Generate the new node
+      const newNodeId = `node-${Date.now()}`;
+      const label = nodeType
+        .replace(/([A-Z])/g, " $1")
+        .replace(/^./, (str) => str.toUpperCase())
+        .trim();
 
-        // Generate the new node locally to match what the API will create
-        const newNodeId = `node-${Date.now()}`;
-        const label = nodeType
-          .replace(/([A-Z])/g, " $1")
-          .replace(/^./, (str) => str.toUpperCase())
-          .trim();
+      // Initialize node data based on type
+      let nodeData = { label };
 
-        // Initialize node data based on type
-        let nodeData = { label };
+      switch (nodeType) {
+        case "emailNode":
+          nodeData = {
+            label,
+            recipientEmail: "",
+            subjectLine: "",
+            emailBody: "",
+          };
+          break;
+        case "formNode":
+          nodeData = {
+            label,
+            fields: [],
+          };
+          break;
+        case "apiNode":
+          nodeData = {
+            label,
+            apiEndpoint: "",
+            method: "",
+            requestHeaders: "",
+            requestBody: "",
+          };
+          break;
+        case "conditionNode":
+          nodeData = {
+            label,
+            logic: "OR",
+            conditions: [],
+          };
+          break;
+        default:
+          nodeData = { label };
+      }
 
-        switch (nodeType) {
-          case "emailNode":
-            nodeData = {
-              label,
-              recipientEmail: "",
-              subjectLine: "",
-              emailBody: "",
-            };
-            break;
-          case "formNode":
-            nodeData = {
-              label,
-              fields: [],
-            };
-            break;
-          case "apiNode":
-            nodeData = {
-              label,
-              apiEndpoint: "",
-              method: "",
-              requestHeaders: "",
-              requestBody: "",
-            };
-            break;
-          case "conditionNode":
-            nodeData = {
-              label,
-              logic: "OR",
-              conditions: [],
-            };
-            break;
-          default:
-            nodeData = { label };
-        }
+      const newNode = {
+        id: newNodeId,
+        type: nodeType,
+        position: position,
+        data: nodeData,
+      };
 
-        const newNode = {
-          id: newNodeId,
-          type: nodeType,
-          position: position,
-          data: nodeData,
-        };
+      // Update local state
+      const updatedNodes = [...nodes, newNode];
+      setNodes(updatedNodes);
 
-        return [...currentNodes, newNode];
-      });
+      // Dispatch to update project in database
+      dispatch(
+        updateProject({
+          updatedProject: {
+            ...project,
+            nodes: updatedNodes,
+            edges: edges,
+            metadata: {
+              ...project.metadata,
+              lastModified: new Date().toISOString(),
+            },
+          },
+        })
+      );
     },
-    [project, projectId, screenToFlowPosition]
+    [project, nodes, edges, screenToFlowPosition, dispatch]
   );
 
   const nodeTypes = {
