@@ -34,7 +34,7 @@ function Navbar() {
     dispatch(logout());
     dispatch(emptyProjects());
     dispatch(emptyCurrentProject());
-    navigate("/login");
+    navigate("/");
   };
 
   return (

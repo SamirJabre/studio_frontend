@@ -10,7 +10,7 @@ const RequireAuth = () => {
 
   if (!isAuthenticated || !token) {
     // Preserve the path the user tried to visit so we can send them back after login
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to="/" replace state={{ from: location }} />;
   }
 
   return <Outlet />;
