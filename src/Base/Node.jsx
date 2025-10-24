@@ -11,7 +11,6 @@ import {
 import { useDispatch } from "react-redux";
 import { setNodeType } from "../Redux/Slices/nodeSlice";
 
-
 const NODE_CONFIGS = {
   startNode: {
     icon: FaPlayCircle,
@@ -63,7 +62,7 @@ const NODE_CONFIGS = {
   },
 };
 
-function Node({ selected, type, id, data }) {
+function Node({ selected, type, data }) {
   const dispatch = useDispatch();
 
   const config = NODE_CONFIGS[type];
@@ -76,7 +75,6 @@ function Node({ selected, type, id, data }) {
         selected ? "border-[#5664F5] shadow-md" : "border-gray-200"
       }`}
     >
-      
       <div
         className="p-2 rounded-lg text-white transition-transform group-hover:scale-110 duration-200"
         style={{ backgroundColor: config.color }}
@@ -84,13 +82,11 @@ function Node({ selected, type, id, data }) {
         <Icon />
       </div>
 
-
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-semibold text-gray-800 group-hover:text-[#5664F5] transition-colors">
           {data.label}
         </h4>
       </div>
-
 
       {selected && type !== "startNode" && type !== "endNode" && (
         <button
@@ -111,14 +107,39 @@ function Node({ selected, type, id, data }) {
         </button>
       )}
 
-
       {config.handles.target && (
         <Handle type="target" position={Position.Left} nonce="white" />
       )}
       {config.handles.source && (
-        <Handle type="source" position={Position.Right} />
-      )}
+        <>
+          {data?.conditions && data.conditions.length > 1 ? (
+            // Multiple handles for multiple conditions
+            data.conditions.map((condition, index) => {
+              const totalConditions = data.conditions.length;
+              const spacing = 100 / (totalConditions + 1);
+              const topPosition = spacing * (index + 1);
+              const handleId = String.fromCharCode(97 + index); // 'a', 'b', 'c', etc.
 
+              return (
+                <Handle
+                  key={`condition-${index}`}
+                  type="source"
+                  position={Position.Right}
+                  id={handleId}
+                  style={{
+                    top: `${topPosition}%`,
+                    background: config.color,
+                  }}
+                  nonce="green"
+                />
+              );
+            })
+          ) : (
+            // Single handle for non-condition nodes or single condition
+            <Handle type="source" position={Position.Right} nonce="green" />
+          )}
+        </>
+      )}
 
       <style>
         {`

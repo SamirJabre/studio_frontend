@@ -182,6 +182,18 @@
                 "field": "user.age",
                 "operator": "is_not_empty",
                 "value": "18"
+              },
+              {
+                "id": 1761329767942,
+                "field": "",
+                "operator": "equals",
+                "value": ""
+              },
+              {
+                "id": 1761329823839,
+                "field": "",
+                "operator": "equals",
+                "value": ""
               }
             ]
           },
@@ -248,8 +260,43 @@
             "width": 167,
             "height": 60
           },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761329762886",
+          "type": "emailNode",
+          "position": {
+            "x": 400.10661547324014,
+            "y": -72.79463710485471
+          },
+          "data": {
+            "label": "Email Node",
+            "recipientEmail": "",
+            "subjectLine": "",
+            "emailBody": ""
+          },
+          "measured": {
+            "width": 145,
+            "height": 60
+          },
           "selected": true,
           "dragging": true
+        },
+        {
+          "id": "node-1761329827653",
+          "type": "endNode",
+          "position": {
+            "x": 430.73218092993585,
+            "y": 63.46216209961619
+          },
+          "data": {
+            "label": "End Node"
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          }
         }
       ],
       "edges": [
@@ -277,11 +324,23 @@
           "id": "c5d8-d1a6",
           "source": "c5d8",
           "target": "d1a6"
+        },
+        {
+          "id": "c5d8-node-1761329762886-b",
+          "source": "c5d8",
+          "target": "node-1761329762886",
+          "sourceHandle": "b"
+        },
+        {
+          "id": "c5d8-node-1761329827653-c",
+          "source": "c5d8",
+          "target": "node-1761329827653",
+          "sourceHandle": "c"
         }
       ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
-        "lastModified": "2025-10-24T17:16:18.101Z",
+        "lastModified": "2025-10-24T18:20:13.531Z",
         "version": 1
       }
     },

@@ -101,9 +101,12 @@ function CenterCanvas({ project, user_id }) {
       console.log(params);
 
       const newEdge = {
-        id: `${params.source}-${params.target}`,
+        id: `${params.source}-${params.target}${
+          params.sourceHandle ? `-${params.sourceHandle}` : ""
+        }`,
         source: params.source,
         target: params.target,
+        ...(params.sourceHandle && { sourceHandle: params.sourceHandle }),
       };
 
       setEdges((edgesSnapshot) => [...edgesSnapshot, newEdge]);
