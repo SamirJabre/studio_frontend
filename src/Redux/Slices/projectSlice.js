@@ -52,6 +52,11 @@ const projectSlice = createSlice({
     currentProject: [],
     loading: false,
   },
+  reducers: {
+    emptyCurrentProject: (state) => {
+      state.currentProject = [];
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -73,4 +78,5 @@ const projectSlice = createSlice({
   },
 });
 
+export const { emptyCurrentProject } = projectSlice.actions;
 export default projectSlice.reducer;
