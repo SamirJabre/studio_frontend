@@ -128,8 +128,8 @@
         {
           "id": "a3f7",
           "position": {
-            "x": -576.7909278560244,
-            "y": -85.12150271722761
+            "x": -647.0320835181487,
+            "y": -97.02678333792664
           },
           "data": {
             "label": "Start Node"
@@ -140,7 +140,7 @@
             "height": 60
           },
           "selected": false,
-          "dragging": false
+          "dragging": true
         },
         {
           "id": "b8e2",
@@ -170,8 +170,8 @@
         {
           "id": "c5d8",
           "position": {
-            "x": 119.6457181500399,
-            "y": -112.2485586598588
+            "x": 333.9522549305601,
+            "y": -103.56045581740527
           },
           "data": {
             "label": "User Verification Check",
@@ -208,8 +208,8 @@
         {
           "id": "c5d9",
           "position": {
-            "x": -260.3269856850137,
-            "y": -80.82606321233659
+            "x": -192.99418865599893,
+            "y": -106.89037173969717
           },
           "data": {
             "label": "Welcome Email",
@@ -223,13 +223,13 @@
             "height": 60
           },
           "selected": false,
-          "dragging": false
+          "dragging": true
         },
         {
           "id": "d1a6",
           "position": {
-            "x": 405.8187276498594,
-            "y": -192.8798612290239
+            "x": 656.0240544370643,
+            "y": -185.19811873994306
           },
           "data": {
             "label": "End Node"
@@ -245,8 +245,8 @@
         {
           "id": "e4b3",
           "position": {
-            "x": -73.09331698051058,
-            "y": -276.0128316707319
+            "x": 74.60443134119932,
+            "y": -219.540163194784
           },
           "data": {
             "label": "Something API",
@@ -267,8 +267,8 @@
           "id": "node-1761329762886",
           "type": "emailNode",
           "position": {
-            "x": 472.086880058839,
-            "y": -68.21407481304388
+            "x": 726.588224061222,
+            "y": -104.45374839267123
           },
           "data": {
             "label": "Email Node",
@@ -280,15 +280,15 @@
             "width": 145,
             "height": 60
           },
-          "selected": true,
+          "selected": false,
           "dragging": true
         },
         {
           "id": "node-1761329827653",
           "type": "endNode",
           "position": {
-            "x": 430.73218092993585,
-            "y": 63.46216209961619
+            "x": 653.3935776884232,
+            "y": -20.035861684816574
           },
           "data": {
             "label": "End Node"
@@ -296,7 +296,9 @@
           "measured": {
             "width": 135,
             "height": 60
-          }
+          },
+          "selected": true,
+          "dragging": true
         }
       ],
       "edges": [
@@ -350,7 +352,7 @@
       ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
-        "lastModified": "2025-10-26T19:25:11.510Z",
+        "lastModified": "2025-10-26T19:26:47.844Z",
         "version": 1
       }
     },
@@ -411,6 +413,183 @@
         "lastModified": "2025-09-21T09:15:00.000Z",
         "version": 1
       }
+    },
+    {
+      "id": "be71",
+      "title": "Testing Project",
+      "description": "This project is for testing purposes",
+      "color": "#EF4444",
+      "nodes": [
+        {
+          "id": "node-1761507058225",
+          "type": "startNode",
+          "position": {
+            "x": 257,
+            "y": 281.5
+          },
+          "data": {
+            "label": "Start Node"
+          },
+          "measured": {
+            "width": 141,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507059426",
+          "type": "formNode",
+          "position": {
+            "x": 585.5,
+            "y": 282.25
+          },
+          "data": {
+            "label": "Important Form",
+            "fields": [
+              {
+                "id": 1,
+                "label": "Full Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": 1761507090424,
+                "label": "Sex",
+                "type": "radio",
+                "required": true
+              },
+              {
+                "id": 1761507103520,
+                "label": "Age",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "measured": {
+            "width": 173,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507061646",
+          "type": "conditionNode",
+          "position": {
+            "x": 939.9153930748073,
+            "y": 283.5302065800119
+          },
+          "data": {
+            "label": "Condition",
+            "logic": "AND",
+            "conditions": [
+              {
+                "id": 1,
+                "field": "user.sex",
+                "operator": "equals",
+                "value": "Female"
+              },
+              {
+                "id": 1761507165365,
+                "field": "user.age",
+                "operator": "less_than",
+                "value": "18"
+              }
+            ]
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507187880",
+          "type": "endNode",
+          "position": {
+            "x": 1275.95525288679,
+            "y": 178.5705768916029
+          },
+          "data": {
+            "label": "End Node"
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": true,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507215942",
+          "type": "emailNode",
+          "position": {
+            "x": 1275.3661360376227,
+            "y": 362.4059486476472
+          },
+          "data": {
+            "label": "Email Node",
+            "recipientEmail": "",
+            "subjectLine": "",
+            "emailBody": ""
+          },
+          "measured": {
+            "width": 145,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        }
+      ],
+      "edges": [
+        {
+          "id": "node-1761507058225-node-1761507059426",
+          "source": "node-1761507058225",
+          "target": "node-1761507059426",
+          "type": "customEdge",
+          "data": {
+            "label": "Fill up the form"
+          }
+        },
+        {
+          "id": "node-1761507059426-node-1761507061646",
+          "source": "node-1761507059426",
+          "target": "node-1761507061646",
+          "type": "customEdge",
+          "data": {
+            "label": "Check Conditions"
+          }
+        },
+        {
+          "id": "node-1761507061646-node-1761507187880-a",
+          "source": "node-1761507061646",
+          "target": "node-1761507187880",
+          "type": "customEdge",
+          "sourceHandle": "a",
+          "data": {
+            "label": "Fuck out"
+          }
+        },
+        {
+          "id": "node-1761507061646-node-1761507215942-b",
+          "source": "node-1761507061646",
+          "target": "node-1761507215942",
+          "type": "customEdge",
+          "sourceHandle": "b",
+          "data": {
+            "label": "Whatever Else Accepted"
+          }
+        }
+      ],
+      "metadata": {
+        "createdAt": "2025-10-26T19:27:30.408Z",
+        "lastModified": "2025-10-26T19:34:00.187Z",
+        "version": 1
+      },
+      "user_id": "7ed2"
     }
   ]
 }
