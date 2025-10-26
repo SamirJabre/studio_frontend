@@ -38,33 +38,61 @@ function Navbar() {
   };
 
   return (
-    <nav className="w-full h-16 sm:h-20 flex justify-between items-center bg-white shadow-lg px-2 sm:px-4">
-      <div className="flex items-center justify-center">
-        <img
-          src={logo}
-          alt="Logo"
-          className="h-8 w-8 sm:h-12 sm:w-12 md:h-14 md:w-14 object-contain"
-        />
-        <p className="text-lg sm:text-xl md:text-2xl font-semibold font-sans ml-1 sm:ml-2">
+    <nav className="w-full h-14 sm:h-16 md:h-18 flex justify-between items-center bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100 px-3 sm:px-6 md:px-8 sticky top-0 z-50">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-md hover:shadow-lg transition-shadow duration-300">
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 object-contain"
+          />
+        </div>
+        <h1 className="text-base sm:text-lg md:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
           Studio
-        </p>
+        </h1>
       </div>
-      <div className="flex justify-center items-center gap-x-2 sm:gap-x-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Box sx={{ flexGrow: 0 }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+          <Tooltip title="Account settings" arrow>
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{
+                p: 0,
+                transition: "transform 0.2s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
               <Avatar
-                alt="Walter White"
+                alt="User Avatar"
                 src="https://i.sstatic.net/pEihy.png"
                 sx={{
-                  width: { xs: 32, sm: 40 },
-                  height: { xs: 32, sm: 40 },
+                  width: { xs: 36, sm: 40, md: 44 },
+                  height: { xs: 36, sm: 40, md: 44 },
+                  border: "2px solid",
+                  borderColor: "transparent",
+                  background:
+                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    borderColor: "#667eea",
+                    boxShadow: "0 0 0 3px rgba(102, 126, 234, 0.1)",
+                  },
                 }}
               />
             </IconButton>
           </Tooltip>
           <Menu
-            sx={{ mt: "45px" }}
+            sx={{
+              mt: "50px",
+              "& .MuiPaper-root": {
+                borderRadius: "12px",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                minWidth: "160px",
+                border: "1px solid rgba(0,0,0,0.05)",
+              },
+            }}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
@@ -79,8 +107,29 @@ function Navbar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            <MenuItem onClick={handleCloseUserMenu}>
-              <Typography sx={{ textAlign: "center" }} onClick={handleLogout}>
+            <MenuItem
+              onClick={() => {
+                handleCloseUserMenu();
+                handleLogout();
+              }}
+              sx={{
+                borderRadius: "8px",
+                mx: 1,
+                my: 0.5,
+                "&:hover": {
+                  backgroundColor: "rgba(239, 68, 68, 0.08)",
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  fontSize: { xs: "0.875rem", sm: "0.95rem" },
+                  fontWeight: 500,
+                  color: "#dc2626",
+                  width: "100%",
+                }}
+              >
                 Log Out
               </Typography>
             </MenuItem>
