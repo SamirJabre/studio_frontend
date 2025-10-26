@@ -267,8 +267,8 @@
           "id": "node-1761329762886",
           "type": "emailNode",
           "position": {
-            "x": 400.10661547324014,
-            "y": -72.79463710485471
+            "x": 472.086880058839,
+            "y": -68.21407481304388
           },
           "data": {
             "label": "Email Node",
@@ -335,7 +335,10 @@
           "source": "c5d8",
           "target": "node-1761329762886",
           "sourceHandle": "b",
-          "type": "customEdge"
+          "type": "customEdge",
+          "data": {
+            "label": "Email Node"
+          }
         },
         {
           "id": "c5d8-node-1761329827653-c",
@@ -347,7 +350,7 @@
       ],
       "metadata": {
         "createdAt": "2025-09-28T14:30:00.000Z",
-        "lastModified": "2025-10-24T18:20:13.531Z",
+        "lastModified": "2025-10-26T19:25:11.510Z",
         "version": 1
       }
     },
