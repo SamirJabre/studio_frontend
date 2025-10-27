@@ -39,7 +39,7 @@ function CenterCanvas({ project, user_id }) {
       setNodes(JSON.parse(JSON.stringify(nodes)));
       setEdges(JSON.parse(JSON.stringify(edges)));
     } else {
-      navigate("/accessdenied");
+      navigate("/dashboard");
     }
   }, [userId, user_id, project, navigate, dispatch]);
 

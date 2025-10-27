@@ -77,6 +77,9 @@ const projectSlice = createSlice({
     emptyCurrentProject: (state) => {
       state.currentProject = [];
     },
+    discardModifications: (state) => {
+      state.modified = false;
+    },
   },
 
   extraReducers: (builder) => {
@@ -109,5 +112,6 @@ const projectSlice = createSlice({
   },
 });
 
-export const { emptyCurrentProject } = projectSlice.actions;
+export const { emptyCurrentProject, discardModifications } =
+  projectSlice.actions;
 export default projectSlice.reducer;

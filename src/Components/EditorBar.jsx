@@ -5,7 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
-import { saveProject } from "../Redux/Slices/projectSlice.js";
+import {
+  saveProject,
+  discardModifications,
+} from "../Redux/Slices/projectSlice.js";
 
 function EditorBar({ project, onProjectUpdate }) {
   const navigate = useNavigate();
@@ -17,6 +20,7 @@ function EditorBar({ project, onProjectUpdate }) {
   console.log(selectedEdge);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [discardDialogOpen, setDiscardDialogOpen] = useState(false);
   const [projectTitle, setProjectTitle] = useState(project?.title || "");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -109,6 +113,19 @@ function EditorBar({ project, onProjectUpdate }) {
   const handleTitleChange = (e) => {
     setProjectTitle(e.target.value);
   };
+  const handleReturnToDashboard = () => {
+    if (modified) {
+      setDiscardDialogOpen(true);
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
+  const handleDiscardChanges = () => {
+    setDiscardDialogOpen(false);
+    dispatch(discardModifications());
+    navigate("/dashboard");
+  };
 
   return (
     <>
@@ -123,7 +140,7 @@ function EditorBar({ project, onProjectUpdate }) {
         <div className="w-full h-full flex items-center gap-3 px-4">
           {/* Back Button */}
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={handleReturnToDashboard}
             className="h-9 px-4 bg-gradient-to-br from-[#5664F5] to-[#4451d9] text-white rounded-lg hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 font-semibold text-sm"
           >
             <FaLeftLong className="text-xs" />
@@ -209,8 +226,18 @@ function EditorBar({ project, onProjectUpdate }) {
         cancelText="Cancel"
         type="info"
       />
+
+      <ConfirmDialog
+        isOpen={discardDialogOpen}
+        onClose={() => setDiscardDialogOpen(false)}
+        onConfirm={handleDiscardChanges}
+        title="Discard Changes"
+        message="Discard Unsaved Changes ?"
+        confirmText="Discard"
+        cancelText="Cancel"
+        type="warning"
+      />
     </>
   );
 }
-
 export default EditorBar;

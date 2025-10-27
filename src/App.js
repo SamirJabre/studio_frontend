@@ -6,7 +6,6 @@ import axios from "axios";
 import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
 import Editor from "./Pages/Editor";
-import AccessDenied from "./Pages/AccessDenied";
 import ProjectNotFound from "./Pages/ProjectNotFound";
 import RequireAuth from "./Routes/RequireAuth";
 import RequireGuest from "./Routes/RequireGuest";
@@ -59,7 +58,6 @@ const App = () => {
           </Route>
 
           {/* Optional utility routes */}
-          <Route path="/accessdenied" element={<AccessDenied />} />
           <Route path="/404" element={<ProjectNotFound />} />
         </Routes>
       </BrowserRouter>
