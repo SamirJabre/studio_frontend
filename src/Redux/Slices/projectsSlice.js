@@ -99,6 +99,38 @@ export const duplicateProject = createAsyncThunk(
   }
 );
 
+export const importProject = createAsyncThunk(
+  "projects/importProject",
+  async ({ projectData }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token")?.toString();
+      const user_id = jwtDecode(token).id;
+
+      // Remove the old id and assign new user_id
+      const importedProject = {
+        ...projectData,
+        id: undefined, // Let the backend assign a new ID
+        user_id, // Assign to the current logged-in user
+        title: projectData.title
+          ? `${projectData.title} (Imported)`
+          : "Imported Project",
+        metadata: {
+          ...projectData.metadata,
+          createdAt: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          importedAt: new Date().toISOString(),
+        },
+      };
+
+      const response = await axios.post("/projects", importedProject);
+      return response.data;
+    } catch (error) {
+      console.error("Error importing project:", error);
+      return rejectWithValue("Error importing project");
+    }
+  }
+);
+
 export const projectsSlice = createSlice({
   name: "projects",
   initialState: {
@@ -108,6 +140,7 @@ export const projectsSlice = createSlice({
     createProjectLoading: false,
     deleteProjectLoading: false,
     duplicateProjectLoading: false,
+    importProjectLoading: false,
   },
   reducers: {
     emptyProjects: (state) => {
@@ -160,6 +193,21 @@ export const projectsSlice = createSlice({
       .addCase(duplicateProject.fulfilled, (state, action) => {
         state.projects.push(action.payload);
         state.duplicateProjectLoading = false;
+      });
+
+    builder
+      .addCase(importProject.pending, (state) => {
+        state.importProjectLoading = true;
+        state.error = null;
+      })
+      .addCase(importProject.fulfilled, (state, action) => {
+        state.projects.push(action.payload);
+        state.importProjectLoading = false;
+        state.error = null;
+      })
+      .addCase(importProject.rejected, (state, action) => {
+        state.importProjectLoading = false;
+        state.error = action.payload;
       });
   },
 });

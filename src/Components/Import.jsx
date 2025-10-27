@@ -1,4 +1,7 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { importProject } from "../Redux/Slices/projectsSlice";
+import { useToast } from "../Context/ToastContext";
 import {
   FaFileImport,
   FaCloudUploadAlt,
@@ -8,9 +11,13 @@ import {
 import { MdDescription } from "react-icons/md";
 
 function Import() {
+  const dispatch = useDispatch();
+  const { showSuccess, showError } = useToast();
+  const { importProjectLoading } = useSelector((state) => state.projects);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState(null); // 'success', 'error', null
+  const [errorMessage, setErrorMessage] = useState("");
   const fileInputRef = useRef(null);
 
   const handleDragOver = (e) => {
@@ -55,20 +62,50 @@ function Import() {
     fileInputRef.current?.click();
   };
 
-  const handleImport = () => {
+  const handleImport = async () => {
     if (selectedFile) {
-      // Simulate import process
-      // TODO: Implement actual import logic
-      setUploadStatus("success");
-      setTimeout(() => {
-        console.log("Importing file:", selectedFile.name);
-      }, 500);
+      try {
+        // Read the file content
+        const fileContent = await selectedFile.text();
+        const projectData = JSON.parse(fileContent);
+
+        // Validate that it's a valid project structure
+        if (!projectData || typeof projectData !== "object") {
+          setUploadStatus("error");
+          setErrorMessage("Invalid project file format.");
+          showError("Invalid project file format.");
+          return;
+        }
+
+        // Dispatch the import action
+        const result = await dispatch(importProject({ projectData })).unwrap();
+
+        if (result) {
+          setUploadStatus("success");
+          setErrorMessage("");
+          showSuccess("Project imported successfully!");
+
+          // Clear the file after 2 seconds on success
+          setTimeout(() => {
+            handleClear();
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("Error importing project:", error);
+        const errorMsg =
+          error.message ||
+          "Failed to import project. Please check the file format.";
+        setUploadStatus("error");
+        setErrorMessage(errorMsg);
+        showError(errorMsg);
+      }
     }
   };
 
   const handleClear = () => {
     setSelectedFile(null);
     setUploadStatus(null);
+    setErrorMessage("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -179,7 +216,8 @@ function Import() {
                 <div className="flex items-center gap-3 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl sm:rounded-2xl">
                   <FaTimesCircle className="text-lg sm:text-xl text-red-500 flex-shrink-0" />
                   <p className="text-xs sm:text-sm text-red-700 font-medium">
-                    Invalid file type. Please upload a JSON file.
+                    {errorMessage ||
+                      "Invalid file type. Please upload a JSON file."}
                   </p>
                 </div>
               )}
@@ -188,14 +226,41 @@ function Import() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={handleImport}
-                  disabled={uploadStatus === "success"}
-                  className="flex-1 px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl sm:rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none text-sm sm:text-base"
+                  disabled={uploadStatus === "success" || importProjectLoading}
+                  className="flex-1 px-6 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl sm:rounded-2xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-none text-sm sm:text-base flex items-center justify-center gap-2"
                 >
-                  Import Project
+                  {importProjectLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Importing...</span>
+                    </>
+                  ) : (
+                    "Import Project"
+                  )}
                 </button>
                 <button
                   onClick={handleBrowseClick}
-                  className="flex-1 px-6 py-2.5 sm:py-3 bg-white border-2 border-gray-300 text-gray-700 font-medium rounded-xl sm:rounded-2xl hover:border-blue-400 hover:bg-gray-50 transition-all duration-300 text-sm sm:text-base"
+                  disabled={importProjectLoading}
+                  className="flex-1 px-6 py-2.5 sm:py-3 bg-white border-2 border-gray-300 text-gray-700 font-medium rounded-xl sm:rounded-2xl hover:border-blue-400 hover:bg-gray-50 transition-all duration-300 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Choose Different File
                 </button>

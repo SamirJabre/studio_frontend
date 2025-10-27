@@ -190,6 +190,7 @@ function DashboardBox() {
                   description={project.description}
                   metadata={project.metadata}
                   color={project.color}
+                  project={project}
                   onDelete={() =>
                     handleDeleteProject(project.id, project.title)
                   }

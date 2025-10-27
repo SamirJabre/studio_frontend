@@ -590,6 +590,424 @@
         "version": 1
       },
       "user_id": "7ed2"
+    },
+    {
+      "id": "0411",
+      "user_id": "76cd",
+      "title": "Healthcare Portal (Imported)",
+      "description": "Patient management system with appointment scheduling, medical records, and telemedicine integration.",
+      "color": "#8B5CF6",
+      "nodes": [
+        {
+          "id": "a3f7",
+          "position": {
+            "x": -647.0320835181487,
+            "y": -97.02678333792664
+          },
+          "data": {
+            "label": "Start Node"
+          },
+          "type": "startNode",
+          "measured": {
+            "width": 141,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "b8e2",
+          "position": {
+            "x": -407.08907717879015,
+            "y": -215.4062053004498
+          },
+          "data": {
+            "label": "Some Title",
+            "fields": [
+              {
+                "id": 1,
+                "label": "Full Name",
+                "type": "text",
+                "required": true
+              }
+            ]
+          },
+          "type": "formNode",
+          "measured": {
+            "width": 139,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": false
+        },
+        {
+          "id": "c5d8",
+          "position": {
+            "x": 333.9522549305601,
+            "y": -103.56045581740527
+          },
+          "data": {
+            "label": "User Verification Check",
+            "logic": "OR",
+            "conditions": [
+              {
+                "id": 1,
+                "field": "user.age",
+                "operator": "is_not_empty",
+                "value": "18"
+              },
+              {
+                "id": 1761329767942,
+                "field": "",
+                "operator": "equals",
+                "value": ""
+              },
+              {
+                "id": 1761329823839,
+                "field": "",
+                "operator": "equals",
+                "value": ""
+              }
+            ]
+          },
+          "type": "conditionNode",
+          "measured": {
+            "width": 218,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "c5d9",
+          "position": {
+            "x": -192.99418865599893,
+            "y": -106.89037173969717
+          },
+          "data": {
+            "label": "Welcome Email",
+            "recipientEmail": "user@example.com",
+            "subjectLine": "Welcome to our platform!",
+            "emailBody": "Thank you for signing up..."
+          },
+          "type": "emailNode",
+          "measured": {
+            "width": 169,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "d1a6",
+          "position": {
+            "x": 656.0240544370643,
+            "y": -185.19811873994306
+          },
+          "data": {
+            "label": "End Node"
+          },
+          "type": "endNode",
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "e4b3",
+          "position": {
+            "x": 74.60443134119932,
+            "y": -219.540163194784
+          },
+          "data": {
+            "label": "Something API",
+            "apiEndpoint": "/samir",
+            "method": "POST",
+            "requestHeaders": "smorhtgnasd",
+            "requestBody": "BODY"
+          },
+          "type": "apiNode",
+          "measured": {
+            "width": 167,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761329762886",
+          "type": "emailNode",
+          "position": {
+            "x": 726.588224061222,
+            "y": -104.45374839267123
+          },
+          "data": {
+            "label": "Email Node",
+            "recipientEmail": "",
+            "subjectLine": "",
+            "emailBody": ""
+          },
+          "measured": {
+            "width": 145,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761329827653",
+          "type": "endNode",
+          "position": {
+            "x": 653.3935776884232,
+            "y": -20.035861684816574
+          },
+          "data": {
+            "label": "End Node"
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": true,
+          "dragging": true
+        }
+      ],
+      "edges": [
+        {
+          "id": "a3f7-b8e2",
+          "source": "a3f7",
+          "target": "b8e2",
+          "type": "customEdge"
+        },
+        {
+          "id": "b8e2-c5d9",
+          "source": "b8e2",
+          "target": "c5d9",
+          "type": "customEdge"
+        },
+        {
+          "id": "c5d9-e4b3",
+          "source": "c5d9",
+          "target": "e4b3",
+          "type": "customEdge"
+        },
+        {
+          "id": "e4b3-c5d8",
+          "source": "e4b3",
+          "target": "c5d8",
+          "type": "customEdge"
+        },
+        {
+          "id": "c5d8-d1a6",
+          "source": "c5d8",
+          "target": "d1a6",
+          "type": "customEdge"
+        },
+        {
+          "id": "c5d8-node-1761329762886-b",
+          "source": "c5d8",
+          "target": "node-1761329762886",
+          "sourceHandle": "b",
+          "type": "customEdge",
+          "data": {
+            "label": "Email Node"
+          }
+        },
+        {
+          "id": "c5d8-node-1761329827653-c",
+          "source": "c5d8",
+          "target": "node-1761329827653",
+          "sourceHandle": "c",
+          "type": "customEdge"
+        }
+      ],
+      "metadata": {
+        "createdAt": "2025-10-27T16:29:42.243Z",
+        "lastModified": "2025-10-27T16:29:42.244Z",
+        "version": 1,
+        "importedAt": "2025-10-27T16:29:42.244Z"
+      }
+    },
+    {
+      "id": "82ab",
+      "title": "Testing Project (Imported)",
+      "description": "This project is for testing purposes",
+      "nodes": [
+        {
+          "id": "node-1761507058225",
+          "type": "startNode",
+          "position": {
+            "x": 257,
+            "y": 281.5
+          },
+          "data": {
+            "label": "Start Node"
+          },
+          "measured": {
+            "width": 141,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507059426",
+          "type": "formNode",
+          "position": {
+            "x": 585.5,
+            "y": 282.25
+          },
+          "data": {
+            "label": "Important Form",
+            "fields": [
+              {
+                "id": 1,
+                "label": "Full Name",
+                "type": "text",
+                "required": true
+              },
+              {
+                "id": 1761507090424,
+                "label": "Sex",
+                "type": "radio",
+                "required": true
+              },
+              {
+                "id": 1761507103520,
+                "label": "Age",
+                "type": "number",
+                "required": true
+              }
+            ]
+          },
+          "measured": {
+            "width": 173,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507061646",
+          "type": "conditionNode",
+          "position": {
+            "x": 939.9153930748073,
+            "y": 283.5302065800119
+          },
+          "data": {
+            "label": "Condition",
+            "logic": "AND",
+            "conditions": [
+              {
+                "id": 1,
+                "field": "user.sex",
+                "operator": "equals",
+                "value": "Female"
+              },
+              {
+                "id": 1761507165365,
+                "field": "user.age",
+                "operator": "less_than",
+                "value": "18"
+              }
+            ]
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507187880",
+          "type": "endNode",
+          "position": {
+            "x": 1275.95525288679,
+            "y": 178.5705768916029
+          },
+          "data": {
+            "label": "End Node"
+          },
+          "measured": {
+            "width": 135,
+            "height": 60
+          },
+          "selected": true,
+          "dragging": true
+        },
+        {
+          "id": "node-1761507215942",
+          "type": "emailNode",
+          "position": {
+            "x": 1275.3661360376227,
+            "y": 362.4059486476472
+          },
+          "data": {
+            "label": "Email Node",
+            "recipientEmail": "",
+            "subjectLine": "",
+            "emailBody": ""
+          },
+          "measured": {
+            "width": 145,
+            "height": 60
+          },
+          "selected": false,
+          "dragging": true
+        }
+      ],
+      "edges": [
+        {
+          "id": "node-1761507058225-node-1761507059426",
+          "source": "node-1761507058225",
+          "target": "node-1761507059426",
+          "type": "customEdge",
+          "data": {
+            "label": "Fill up the form"
+          }
+        },
+        {
+          "id": "node-1761507059426-node-1761507061646",
+          "source": "node-1761507059426",
+          "target": "node-1761507061646",
+          "type": "customEdge",
+          "data": {
+            "label": "Check Conditions"
+          }
+        },
+        {
+          "id": "node-1761507061646-node-1761507187880-a",
+          "source": "node-1761507061646",
+          "target": "node-1761507187880",
+          "type": "customEdge",
+          "sourceHandle": "a",
+          "data": {
+            "label": "Fuck out"
+          }
+        },
+        {
+          "id": "node-1761507061646-node-1761507215942-b",
+          "source": "node-1761507061646",
+          "target": "node-1761507215942",
+          "type": "customEdge",
+          "sourceHandle": "b",
+          "data": {
+            "label": "Whatever Else Accepted"
+          }
+        }
+      ],
+      "metadata": {
+        "createdAt": "2025-10-27T16:34:51.420Z",
+        "lastModified": "2025-10-27T16:34:51.420Z",
+        "version": 1,
+        "exportedAt": "2025-10-27T16:34:19.870Z",
+        "importedAt": "2025-10-27T16:34:51.420Z"
+      },
+      "color": "#EF4444",
+      "user_id": "76cd"
     }
   ]
 }

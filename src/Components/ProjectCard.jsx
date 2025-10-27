@@ -61,6 +61,7 @@ function ProjectCard({
   description,
   metadata,
   color,
+  project,
   onDelete,
   onDuplicate,
 }) {
@@ -78,7 +79,51 @@ function ProjectCard({
   };
 
   const handleExport = () => {
-    console.log("Project Exported");
+    try {
+      // Create a JSON string from the project data
+      const projectDataToExport = {
+        title: project.title,
+        description: project.description,
+        nodes: project.nodes || [],
+        edges: project.edges || [],
+        metadata: {
+          ...project.metadata,
+          exportedAt: new Date().toISOString(),
+        },
+        color: project.color,
+      };
+
+      const jsonString = JSON.stringify(projectDataToExport, null, 2);
+
+      // Create a Blob from the JSON string
+      const blob = new Blob([jsonString], { type: "application/json" });
+
+      // Create a download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+
+      // Generate filename with timestamp
+      const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, "-")
+        .slice(0, -5);
+      const filename = `${title.replace(/[^a-z0-9]/gi, "_")}_${timestamp}.json`;
+      link.download = filename;
+
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      console.log("Project exported successfully:", filename);
+    } catch (error) {
+      console.error("Error exporting project:", error);
+    }
+
     setIsMenuOpen(false);
   };
 
