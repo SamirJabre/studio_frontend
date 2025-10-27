@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { HexColorPicker } from "react-colorful";
 import { FaTimes, FaPalette, FaRocket } from "react-icons/fa";
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
 
 function ProjectConfiguration({ isOpen, onClose, onSave }) {
   const [projectData, setProjectData] = useState({

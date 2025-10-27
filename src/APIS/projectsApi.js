@@ -1,5 +1,5 @@
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.baseURL = "https://studio-backend-mjka.onrender.com/";
 
 axios.interceptors.request.use(
   (config) => {

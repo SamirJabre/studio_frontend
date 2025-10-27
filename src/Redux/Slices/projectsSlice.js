@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.baseURL = "https://studio-backend-mjka.onrender.com/";
 
 const token = localStorage.getItem("token")?.toString();
 

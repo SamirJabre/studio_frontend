@@ -7,6 +7,7 @@ import ConfirmDialog from "../Base/ConfirmDialog.jsx";
 import LoadingSpinner from "./LoadingSpinner.jsx";
 import {
   saveProject,
+  modificationAdded,
   discardModifications,
 } from "../Redux/Slices/projectSlice.js";
 
@@ -112,6 +113,7 @@ function EditorBar({ project, onProjectUpdate }) {
 
   const handleTitleChange = (e) => {
     setProjectTitle(e.target.value);
+    dispatch(modificationAdded());
   };
   const handleReturnToDashboard = () => {
     if (modified) {

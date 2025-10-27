@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-axios.defaults.baseURL = "http://localhost:4000";
+axios.defaults.baseURL = "https://studio-backend-mjka.onrender.com/";
 
 const token = localStorage.getItem("token")?.toString();
 
@@ -77,6 +77,9 @@ const projectSlice = createSlice({
     emptyCurrentProject: (state) => {
       state.currentProject = [];
     },
+    modificationAdded: (state) => {
+      state.modified = true;
+    },
     discardModifications: (state) => {
       state.modified = false;
     },
@@ -112,6 +115,6 @@ const projectSlice = createSlice({
   },
 });
 
-export const { emptyCurrentProject, discardModifications } =
+export const { emptyCurrentProject, discardModifications, modificationAdded } =
   projectSlice.actions;
 export default projectSlice.reducer;
