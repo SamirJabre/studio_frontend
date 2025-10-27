@@ -4,6 +4,7 @@ import {
   FaCalendarAlt,
   FaEllipsisV,
   FaTrash,
+  FaFileExport,
   FaCopy,
   FaClock,
 } from "react-icons/fa";
@@ -76,6 +77,11 @@ function ProjectCard({
     setIsMenuOpen(false);
   };
 
+  const handleExport = () => {
+    console.log("Project Exported");
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className="group w-full bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-100 overflow-hidden relative flex flex-col">
       <div className="h-2 w-full" style={{ backgroundColor: color }}></div>
@@ -113,6 +119,13 @@ function ProjectCard({
                 >
                   <FaTrash size={12} className="text-red-500" />
                   Delete
+                </button>
+                <button
+                  onClick={handleExport}
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-red-50 flex items-center gap-2 text-blue-600"
+                >
+                  <FaFileExport size={12} className="text-blue-600" />
+                  Export
                 </button>
               </div>
             )}
