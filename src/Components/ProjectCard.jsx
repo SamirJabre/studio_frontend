@@ -119,7 +119,6 @@ function ProjectCard({
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      console.log("Project exported successfully:", filename);
     } catch (error) {
       console.error("Error exporting project:", error);
     }

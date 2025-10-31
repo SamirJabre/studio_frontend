@@ -17,8 +17,6 @@ function EditorBar({ project, onProjectUpdate }) {
   const selectedNode = useSelector((state) => state.node);
   const selectedEdge = useSelector((state) => state.edge);
   const { currentProject, modified } = useSelector((state) => state.project);
-  console.log(selectedNode);
-  console.log(selectedEdge);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false);

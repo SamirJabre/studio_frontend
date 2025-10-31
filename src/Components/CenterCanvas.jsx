@@ -27,8 +27,6 @@ function CenterCanvas({ project, user_id }) {
   const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
-    console.log(project);
-
     if (userId == null || user_id == null) return;
     project.nodes.length === 0 && dispatch(setNodeId(null));
 
@@ -45,7 +43,6 @@ function CenterCanvas({ project, user_id }) {
 
   const onNodesChange = useCallback(
     (changes) => {
-      console.log(changes);
       setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
 
       const selectChange = changes.find(
@@ -82,7 +79,6 @@ function CenterCanvas({ project, user_id }) {
   );
   const onEdgesChange = useCallback(
     (changes) => {
-      console.log("Edge changes:", changes);
       if (
         changes.some((change) => change.type === "select" && change.selected)
       ) {
@@ -99,7 +95,6 @@ function CenterCanvas({ project, user_id }) {
   );
   const onConnect = useCallback(
     (params) => {
-      console.log(params);
 
       const newEdge = {
         id: `${params.source}-${params.target}${

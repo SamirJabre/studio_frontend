@@ -24,7 +24,6 @@ export const saveProject = async (projectId, currentProject, projectTitle) => {
         lastModified: new Date().toISOString(),
       },
     });
-    console.log(response.data);
   } catch (error) {
     console.error("Error saving project:", error);
   }

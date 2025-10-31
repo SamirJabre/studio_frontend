@@ -26,7 +26,6 @@ export const loginRequest = createAsyncThunk(
       });
 
       const user = response?.data?.[0];
-      console.log(user);
       if (user) {
         const token = jwt(
           {
@@ -75,7 +74,6 @@ export const registerRequest = createAsyncThunk(
         password,
       });
       const newUser = response.data;
-      console.log(newUser);
       const token = jwt(
         {
           id: newUser.id,

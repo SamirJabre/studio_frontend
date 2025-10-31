@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProjectCard from "./ProjectCard.jsx";
 import SearchInput from "../Base/SearchInput.jsx";
 import { useToast } from "../Context/ToastContext.jsx";
@@ -38,9 +38,7 @@ function DashboardBox() {
     setSearch(query);
   };
 
-  useEffect(() => {
-    dispatch(fetchProjects());
-  }, [dispatch]);
+  projects.length === 0 && dispatch(fetchProjects());
 
   const handleRetry = () => {
     dispatch(fetchProjects());

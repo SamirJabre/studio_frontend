@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setNodeType } from "../Redux/Slices/nodeSlice.js";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import {
   FaTimes,
   FaWpforms,
@@ -23,13 +23,6 @@ function ConfigurationPanel({ project, onProjectUpdate }) {
   const selectedNodeId = useSelector((state) => state.node.nodeId);
   const isOpen = Boolean(selectedNodeType);
   const configRef = useRef(null);
-
-  useEffect(() => {
-    if (selectedNodeType) {
-      console.log("Selected Node Type:", selectedNodeType);
-      console.log("Selected Node ID:", selectedNodeId);
-    }
-  }, [selectedNodeType, selectedNodeId]);
 
   const closePanel = () => {
     dispatch(setNodeType(null));
@@ -85,7 +78,6 @@ function ConfigurationPanel({ project, onProjectUpdate }) {
       //   onProjectUpdate(updatedProject);
 
       //   // Show success feedback
-      //   console.log("Configuration saved successfully!");
       //   closePanel();
       // }
 

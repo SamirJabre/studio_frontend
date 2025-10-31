@@ -29,8 +29,6 @@ export const fetchProjects = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.log(token);
-      console.log(error);
       return rejectWithValue("Server Error, Please Try Again");
     }
   }
@@ -52,9 +50,7 @@ export const createProject = createAsyncThunk(
         },
         user_id,
       };
-      console.log(newProject);
       const response = await axios.post("/projects", newProject);
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
