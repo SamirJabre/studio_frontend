@@ -16,7 +16,7 @@ axios.interceptors.request.use(
 
 export const saveProject = async (projectId, currentProject, projectTitle) => {
   try {
-    const response = await axios.put(`projects/${projectId}`, {
+    await axios.put(`projects/${projectId}`, {
       ...currentProject,
       title: projectTitle,
       metadata: {
