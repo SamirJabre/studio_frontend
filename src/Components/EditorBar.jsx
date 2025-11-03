@@ -10,6 +10,7 @@ import {
   modificationAdded,
   discardModifications,
 } from "../Redux/Slices/projectSlice.js";
+import { useToast } from "../Context/ToastContext.jsx";
 
 function EditorBar({ project, onProjectUpdate }) {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function EditorBar({ project, onProjectUpdate }) {
   const [discardDialogOpen, setDiscardDialogOpen] = useState(false);
   const [projectTitle, setProjectTitle] = useState(project?.title || "");
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   const handleDuplicate = async () => {
     try {
@@ -102,10 +104,14 @@ function EditorBar({ project, onProjectUpdate }) {
 
   const saveChanges = async () => {
     setIsSaving(true);
-    await dispatch(
-      saveProject({ projectId: project.id, currentProject, projectTitle })
-    ).unwrap();
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
+    try {
+      await dispatch(
+        saveProject({ projectId: project.id, currentProject, projectTitle })
+      ).unwrap();
+      showSuccess("Project saved successfully!");
+    } catch (error) {
+      showError(error);
+    }
     setIsSaving(false);
   };
 

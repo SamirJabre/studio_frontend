@@ -8,16 +8,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchProject, updateProject } from "../Redux/Slices/projectSlice.js";
 import ConfigurationPanel from "../Components/ConfigurationPanel";
 import LoadingSpinner from "../Components/LoadingSpinner.jsx";
+import { useToast } from "../Context/ToastContext";
 
 function Editor() {
   const dispatch = useDispatch();
   const projectId = useParams().id;
   const navigate = useNavigate();
   const { currentProject, loading } = useSelector((state) => state.project);
+  const { showError } = useToast();
 
   useEffect(() => {
-    dispatch(fetchProject({ projectId, navigate })).unwrap();
-  }, [dispatch, navigate, projectId]);
+    const loadProject = async () => {
+      try {
+        await dispatch(fetchProject({ projectId })).unwrap();
+      } catch (error) {
+        console.error("Failed to load project:", error);
+        showError(error);
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
+      }
+    };
+
+    loadProject();
+  }, [dispatch, navigate, projectId, showError]);
 
   const handleProjectUpdate = async (updatedProject) => {
     await dispatch(updateProject({ updatedProject })).unwrap();
@@ -40,7 +54,7 @@ function Editor() {
             <CenterCanvas
               project={currentProject}
               user_id={currentProject.user_id}
-              projectId={projectId}
+              // projectId={projectId}
             />
           </ReactFlowProvider>
           <ConfigurationPanel

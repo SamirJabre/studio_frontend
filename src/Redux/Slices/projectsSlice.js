@@ -102,11 +102,10 @@ export const importProject = createAsyncThunk(
       const token = localStorage.getItem("token")?.toString();
       const user_id = jwtDecode(token).id;
 
-      // Remove the old id and assign new user_id
       const importedProject = {
         ...projectData,
-        id: undefined, // Let the backend assign a new ID
-        user_id, // Assign to the current logged-in user
+        id: undefined,
+        user_id,
         title: projectData.title
           ? `${projectData.title} (Imported)`
           : "Imported Project",

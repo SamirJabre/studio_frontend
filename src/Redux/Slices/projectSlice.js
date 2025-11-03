@@ -18,13 +18,12 @@ axios.interceptors.request.use(
 
 export const fetchProject = createAsyncThunk(
   "project/fetchProject",
-  async ({ projectId, navigate }, { rejectWithValue }) => {
+  async ({ projectId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/projects/${projectId}`);
       return response.data;
     } catch (error) {
-      rejectWithValue(error.response.data);
-      return navigate("/404");
+      return rejectWithValue("Failed to fetch project.");
     }
   }
 );

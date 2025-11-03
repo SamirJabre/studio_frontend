@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   applyNodeChanges,
@@ -23,7 +23,6 @@ function CenterCanvas({ project, user_id }) {
   const userId = useSelector((state) => state?.auth?.user?.id);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
@@ -95,6 +94,7 @@ function CenterCanvas({ project, user_id }) {
   );
   const onConnect = useCallback(
     (params) => {
+      console.log(params);
 
       const newEdge = {
         id: `${params.source}-${params.target}${
@@ -218,7 +218,7 @@ function CenterCanvas({ project, user_id }) {
 
   return (
     <>
-      <div className={`h-full w-full z-30`} ref={reactFlowWrapper}>
+      <div className={`h-full w-full z-30`}>
         <ReactFlow
           nodes={nodes}
           nodeTypes={nodeTypes}
